@@ -3,10 +3,11 @@ package com.home.client.homepage;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.home.client.ApplicationPresenter;
-import com.home.client.NameTokens;
+import com.home.client.places.NameTokens;
 
 import javax.inject.Inject;
 
