@@ -5,6 +5,6 @@ import com.gwtplatform.mvp.client.ViewImpl;
 
 public class HomeViewImpl extends ViewImpl implements HomeView {
     HomeViewImpl() {
-        initWidget(new Label("Hello World!"));
+        initWidget(new Label("Hello New World!"));
     }
 }
