@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.7.0//EN"
         "http://gwtproject.org/doctype/2.7.0/gwt-module.dtd">
-<module>
+<module rename-to="testApp">
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
 
     <extend-configuration-property name="gin.ginjector.modules"
