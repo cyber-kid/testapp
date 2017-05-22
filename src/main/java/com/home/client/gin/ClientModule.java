@@ -4,6 +4,8 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import com.gwtplatform.mvp.shared.proxy.RouteTokenFormatter;
 import com.home.client.places.NameTokens;
+import com.home.client.resources.AppResources;
+import com.home.client.utils.StyleInjector;
 
 public class ClientModule extends AbstractPresenterModule {
     @Override
@@ -16,5 +18,7 @@ public class ClientModule extends AbstractPresenterModule {
                 .build());
 
         install(new AppModule());
+
+        bind(StyleInjector.class).asEagerSingleton();
     }
 }
