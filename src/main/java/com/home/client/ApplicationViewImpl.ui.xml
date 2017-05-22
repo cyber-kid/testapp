@@ -4,9 +4,9 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="res" type="com.home.client.resources.AppResources" />
 
-    <g:FlowPanel addStyleNames="{res.loginPageStyle.container}">
-        <g:TextBox ui:field="username"/>
-        <g:PasswordTextBox ui:field="password"/>
-        <g:Button ui:field="confirm" text="Login"/>
-    </g:FlowPanel>
+    <!--<ui:style>
+
+    </ui:style>-->
+
+    <g:SimplePanel ui:field="main" addStyleNames="{res.appStyle.mainPanel}"/>
 </ui:UiBinder>

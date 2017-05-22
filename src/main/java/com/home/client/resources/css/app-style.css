@@ -1,0 +1,9 @@
+html, body {
+    height: 100%;
+}
+.mainPanel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
