@@ -8,4 +8,5 @@ import com.gwtplatform.mvp.client.View;
  */
 public interface LoginView extends View, HasUiHandlers<LoginUiHandlers> {
     void addErrorNote(boolean hasErrors);
+    void clearFields();
 }
