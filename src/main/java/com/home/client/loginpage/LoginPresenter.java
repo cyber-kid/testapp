@@ -58,6 +58,7 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
             placeManager.revealPlace(placeRequest);
         } else {
             getView().addErrorNote(true);
+            getView().clearFields();
         }
     }
 

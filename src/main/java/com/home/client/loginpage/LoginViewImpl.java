@@ -43,5 +43,11 @@ public class LoginViewImpl extends ViewWithUiHandlers<LoginUiHandlers> implement
     public void addErrorNote(boolean hasErrors) {
         errorNote.setVisible(hasErrors);
     }
+
+    @Override
+    public void clearFields() {
+        username.setText("");
+        password.setText("");
+    }
 }
 
