@@ -1,13 +1,11 @@
-package com.home.client;
+package com.home.client.utils;
 
 import com.gwtplatform.mvp.client.annotations.DefaultGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Gatekeeper;
+import com.home.client.CurrentUser;
 
 import javax.inject.Inject;
 
-/**
- * Created by cyberkid on 5/21/17.
- */
 @DefaultGatekeeper
 public class LoggedInGatekeeper implements Gatekeeper {
     private CurrentUser currentUser;
