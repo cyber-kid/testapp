@@ -26,6 +26,8 @@ public class LoginViewImpl extends ViewWithUiHandlers<LoginUiHandlers> implement
     TextBox username;
     @UiField
     PasswordTextBox password;
+    @UiField
+    Label errorNote;
 
     @Inject
     LoginViewImpl(Binder uiBinder) {
@@ -35,6 +37,11 @@ public class LoginViewImpl extends ViewWithUiHandlers<LoginUiHandlers> implement
     @UiHandler("confirm")
     void onConfirm(ClickEvent event) {
         getUiHandlers().confirm(username.getText(), password.getText());
+    }
+
+    @Override
+    public void addErrorNote(boolean hasErrors) {
+        errorNote.setVisible(hasErrors);
     }
 }
 

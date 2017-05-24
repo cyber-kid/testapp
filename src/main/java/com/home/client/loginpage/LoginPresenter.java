@@ -56,6 +56,8 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
                     .nameToken(NameTokens.HOME)
                     .build();
             placeManager.revealPlace(placeRequest);
+        } else {
+            getView().addErrorNote(true);
         }
     }
 

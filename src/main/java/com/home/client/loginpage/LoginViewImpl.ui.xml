@@ -4,9 +4,20 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="res" type="com.home.client.resources.AppResources" />
 
+    <ui:style>
+
+    </ui:style>
+
     <g:FlowPanel addStyleNames="{res.loginPageStyle.container}">
+        <g:Label text="User name:" addStyleNames="{res.loginPageStyle.textLabel}"/>
         <g:TextBox ui:field="username"/>
+        <g:Label text="Password:" addStyleNames="{res.loginPageStyle.textLabel}"/>
         <g:PasswordTextBox ui:field="password"/>
-        <g:Button ui:field="confirm" text="Login"/>
+        <g:FlowPanel addStyleNames="{res.loginPageStyle.buttonContainer}">
+            <g:Button ui:field="confirm" text="Sign In"/>
+            <g:Button ui:field="signUp" text="Sign Up"/>
+        </g:FlowPanel>
+        <g:Label ui:field="errorNote" text="User or password is incorrect!"
+                 addStyleNames="{res.loginPageStyle.textLabel} {res.loginPageStyle.errorNote}" visible="false"/>
     </g:FlowPanel>
 </ui:UiBinder>
