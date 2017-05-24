@@ -4,9 +4,5 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="res" type="com.home.client.resources.AppResources" />
 
-    <!--<ui:style>
-
-    </ui:style>-->
-
     <g:SimplePanel ui:field="main" addStyleNames="{res.appStyle.mainPanel}"/>
 </ui:UiBinder>

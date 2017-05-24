@@ -5,9 +5,6 @@ import com.home.client.resources.AppResources;
 
 import javax.inject.Inject;
 
-/**
- * Created by amyrgorod on 22.5.2017 г..
- */
 public class StyleInjector {
     private final CssResource[] STYLES = new CssResource[] {
             AppResources.INSTANCE.appStyle(),

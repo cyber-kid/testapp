@@ -5,17 +5,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import com.gwtplatform.mvp.client.HasUiHandlers;
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import com.home.client.resources.AppResources;
-import com.home.client.resources.LoginPageStyle;
 
 import javax.inject.Inject;
 
-/**
- * Created by cyberkid on 5/21/17.
- */
 public class LoginViewImpl extends ViewWithUiHandlers<LoginUiHandlers> implements LoginView {
     interface Binder extends UiBinder<Widget, LoginViewImpl> {
     }
@@ -40,8 +33,8 @@ public class LoginViewImpl extends ViewWithUiHandlers<LoginUiHandlers> implement
     }
 
     @Override
-    public void addErrorNote(boolean hasErrors) {
-        errorNote.setVisible(hasErrors);
+    public void addErrorNote() {
+        errorNote.setVisible(true);
     }
 
     @Override

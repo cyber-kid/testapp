@@ -14,9 +14,6 @@ import com.home.client.places.NameTokens;
 
 import javax.inject.Inject;
 
-/**
- * Created by cyberkid on 5/21/17.
- */
 public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
         implements LoginUiHandlers {
 
@@ -50,14 +47,14 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     @Override
     public void confirm(String username, String password) {
         if (validateCredentials(username, password)) {
-            currentUser.setLoggedIn(true);
+            currentUser.setLoggedIn();
 
             PlaceRequest placeRequest = new PlaceRequest.Builder()
                     .nameToken(NameTokens.HOME)
                     .build();
             placeManager.revealPlace(placeRequest);
         } else {
-            getView().addErrorNote(true);
+            getView().addErrorNote();
             getView().clearFields();
         }
     }
