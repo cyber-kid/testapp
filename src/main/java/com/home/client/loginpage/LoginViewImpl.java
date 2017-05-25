@@ -32,6 +32,11 @@ public class LoginViewImpl extends ViewWithUiHandlers<LoginUiHandlers> implement
         getUiHandlers().confirm(username.getText(), password.getText());
     }
 
+    @UiHandler("signUp")
+    void onSignUp(ClickEvent event) {
+        getUiHandlers().signUp();
+    }
+
     @Override
     public void addErrorNote() {
         errorNote.setVisible(true);
