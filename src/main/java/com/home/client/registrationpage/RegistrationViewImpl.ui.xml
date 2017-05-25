@@ -4,6 +4,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <g:FlowPanel>
-        <g:Label>Hello world!</g:Label>
+        <g:Label>Registration Form!</g:Label>
     </g:FlowPanel>
 </ui:UiBinder>

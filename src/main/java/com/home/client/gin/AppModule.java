@@ -11,12 +11,13 @@ import com.home.client.homepage.HomeViewImpl;
 import com.home.client.loginpage.LoginPresenter;
 import com.home.client.loginpage.LoginView;
 import com.home.client.loginpage.LoginViewImpl;
+import com.home.client.registrationpage.RegistrationPresenter;
+import com.home.client.registrationpage.RegistrationView;
+import com.home.client.registrationpage.RegistrationViewImpl;
 
 import javax.inject.Singleton;
 
-/**
- * Created by cyberkid on 5/21/17.
- */
+
 public class AppModule extends AbstractPresenterModule {
     @Override
     protected void configure() {
@@ -24,6 +25,7 @@ public class AppModule extends AbstractPresenterModule {
                 ApplicationPresenter.MyProxy.class);
         bindPresenter(HomePresenter.class, HomeView.class, HomeViewImpl.class, HomePresenter.MyProxy.class);
         bindPresenter(LoginPresenter.class, LoginView.class, LoginViewImpl.class, LoginPresenter.MyProxy.class);
+        bindPresenter(RegistrationPresenter.class, RegistrationView.class, RegistrationViewImpl.class, RegistrationPresenter.MyProxy.class);
         bind(CurrentUser.class).in(Singleton.class);
     }
 }

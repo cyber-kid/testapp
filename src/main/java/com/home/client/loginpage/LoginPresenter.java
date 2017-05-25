@@ -62,4 +62,12 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     private boolean validateCredentials(String username, String password) {
         return username.equals(USERNAME) && password.equals(PASSWORD);
     }
+
+    @Override
+    public void signUp() {
+        PlaceRequest placeRequest = new PlaceRequest.Builder()
+                .nameToken(NameTokens.REGISTER)
+                .build();
+        placeManager.revealPlace(placeRequest);
+    }
 }
