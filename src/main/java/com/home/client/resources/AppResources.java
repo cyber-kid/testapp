@@ -6,10 +6,12 @@ import com.google.gwt.resources.client.ClientBundle;
 public interface AppResources extends ClientBundle {
     AppResources INSTANCE = GWT.create(AppResources.class);
 
-    @ClientBundle.Source("css/login-page-style.css")
+    @Source("css/login-page-style.css")
     LoginPageStyle loginPageStyle();
 
-    @ClientBundle.Source("css/app-style.css")
+    @Source("css/app-style.css")
     AppStyle appStyle();
 
+    @Source("css/look-up.css")
+    LookUpStyle lookUpStyle();
 }

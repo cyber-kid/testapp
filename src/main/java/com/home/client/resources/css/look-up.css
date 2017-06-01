@@ -1,0 +1,25 @@
+.focusedItem {
+    background-color: rgb(228, 231, 243);
+}
+.dropDown {
+    border : rgba(63,70,98, .4) solid 1px;
+    box-sizing : border-box;
+    min-height: 19px;
+}
+.textBox {
+    border: rgba(63,70,98, .4) solid 1px;
+    outline: none;
+    padding: 0px 5px;
+}
+.mainPanel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.text {
+    font-size: 15px;
+    font-family: system-ui;
+}
+.label {
+    margin-right: 5px;
+}

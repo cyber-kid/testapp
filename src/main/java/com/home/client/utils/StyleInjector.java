@@ -8,7 +8,8 @@ import javax.inject.Inject;
 public class StyleInjector {
     private final CssResource[] STYLES = new CssResource[] {
             AppResources.INSTANCE.appStyle(),
-            AppResources.INSTANCE.loginPageStyle()
+            AppResources.INSTANCE.loginPageStyle(),
+            AppResources.INSTANCE.lookUpStyle()
     };
 
     @Inject
