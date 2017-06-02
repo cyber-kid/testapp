@@ -1,0 +1,11 @@
+<!DOCTYPE ui:UiBinder SYSTEM
+        "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="res" type="com.home.client.resources.AppResources" />
+
+    <g:FlowPanel addStyleNames="{res.lookUpStyle.container} {res.lookUpStyle.horizontal}">
+        <g:Label ui:field="lookUpLabel" addStyleNames="{res.lookUpStyle.text} {res.lookUpStyle.label}"/>
+        <g:TextBox ui:field="input" addStyleNames="{res.lookUpStyle.textBox} {res.lookUpStyle.text}"/>
+    </g:FlowPanel>
+</ui:UiBinder>

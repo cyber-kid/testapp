@@ -6,7 +6,9 @@ public interface LookUpStyle extends CssResource{
     String focusedItem();
     String dropDown();
     String textBox();
-    String mainPanel();
+    String container();
     String text();
     String label();
+    String horizontal();
+    String vertical();
 }

@@ -5,9 +5,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
 import com.home.client.resources.LookUpStyle;
@@ -21,9 +19,13 @@ public class LookUp extends Composite implements HasText,
         HasWidgets,
         SelectionHandler<String>,
         MouseOverHandler {
-    interface Binder extends UiBinder<Widget, LookUp> {}
+    @UiTemplate("LookUpHorizontal.ui.xml")
+    interface UiBinderHorizontal extends UiBinder<Widget, LookUp> {}
+    private static UiBinderHorizontal horizontalUiBinder = GWT.create(UiBinderHorizontal.class);
 
-    private static Binder uiBinder = GWT.create(Binder.class);
+    @UiTemplate("LookUpVertical.ui.xml")
+    interface UiBinderVertical extends UiBinder<Widget, LookUp> {}
+    private static UiBinderVertical verticalUiBinder = GWT.create(UiBinderVertical.class);
 
     private PopupPanel dropDown = new PopupPanel();
     private FlowPanel panel = new FlowPanel();
@@ -36,8 +38,13 @@ public class LookUp extends Composite implements HasText,
     @UiField
     public Label lookUpLabel;
 
-    LookUp() {
-        initWidget(uiBinder.createAndBindUi(this));
+    @UiConstructor
+    public LookUp(boolean vertical) {
+        if (vertical) {
+            initWidget(verticalUiBinder.createAndBindUi(this));
+        } else {
+            initWidget(horizontalUiBinder.createAndBindUi(this));
+        }
         initiateDropDown();
     }
 
