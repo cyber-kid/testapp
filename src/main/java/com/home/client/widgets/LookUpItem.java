@@ -21,9 +21,8 @@ public class LookUpItem<T> extends Composite implements HasText,
     @UiField
     public Label item;
 
-    public LookUpItem(String name) {
+    public LookUpItem() {
         initWidget(uiBinder.createAndBindUi(this));
-        setText(name);
     }
 
     @Override
