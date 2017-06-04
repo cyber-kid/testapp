@@ -57,15 +57,9 @@ public class LookUp<T> extends Composite implements HasText,
     }
 
     @UiHandler("input")
-    public void onKeyDown(KeyUpEvent event) {
+    public void onKeyUp(KeyUpEvent event) {
         int keyCode = event.getNativeEvent().getKeyCode();
-        if(event.isDownArrow()) {
-            showDropDown();
-            focusNextItem();
-        }
-        if (event.isUpArrow()) {
-            focusPreviousItem();
-        }
+
         if (keyCode == KeyCodes.KEY_ENTER) {
             setText(getTextFromFocusedItem());
             hideDropDown();
@@ -79,7 +73,17 @@ public class LookUp<T> extends Composite implements HasText,
         }
     }
 
-
+    @UiHandler("input")
+    public void onArrowsKeyDown (KeyDownEvent keyDownEvent) {
+        if (keyDownEvent.isUpArrow()) {
+            keyDownEvent.preventDefault();
+            focusPreviousItem();
+        }
+        if(keyDownEvent.isDownArrow()) {
+            showDropDown();
+            focusNextItem();
+        }
+    }
 
     private void initiateDropDown() {
         dropDown.setStyleName(STYLE.dropDown(), true);
