@@ -50,10 +50,20 @@ public class LookUp<T> extends Composite implements HasText,
     }
 
     @UiHandler("input")
+    public void onClick (ClickEvent clickEvent) {
+        positionPopUp();
+        showDropDown();
+    }
+
+    @UiHandler("input")
     public void onTextBoxFocus(FocusEvent event) {
+        positionPopUp();
+        showDropDown();
+    }
+
+    private void positionPopUp() {
         dropDown.setPopupPosition(input.getAbsoluteLeft(), input.getAbsoluteTop() + input.getOffsetHeight());
         dropDown.getElement().getStyle().setWidth(input.getOffsetWidth(), Style.Unit.PX);
-        showDropDown();
     }
 
     @UiHandler("input")
