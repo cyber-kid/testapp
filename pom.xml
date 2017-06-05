@@ -13,6 +13,7 @@
         <!-- client -->
         <gwt.version>2.8.0</gwt.version>
         <gwtp.version>1.6</gwtp.version>
+        <guava.version>18.0</guava.version>
 
         <!-- plugins -->
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
@@ -78,6 +79,16 @@
             <artifactId>gwtp-mvp-client</artifactId>
             <version>${gwtp.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
+            <version>${guava.version}</version>
         </dependency>
     </dependencies>
 </project>
