@@ -5,6 +5,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.common.base.Strings;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
@@ -103,7 +104,8 @@ public class LookUp<T> extends Composite implements HasText,
 
     private void filterDropDown(final String searchStr) {
         panel.clear();
-        if (searchStr != null || searchStr.length() != 0) {
+        /*if (searchStr != null || searchStr.length() != 0) {*/
+        if (!Strings.isNullOrEmpty(searchStr)) {
             items.stream().filter(i -> i.getText().startsWith(searchStr)).forEach(panel::add);
         } else {
             items.stream().forEach(panel::add);

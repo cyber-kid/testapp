@@ -3,6 +3,7 @@
         "http://gwtproject.org/doctype/2.7.0/gwt-module.dtd">
 <module rename-to="testApp">
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
+    <inherits name="com.google.common.base.Base" />
 
     <extend-configuration-property name="gin.ginjector.modules"
                                    value="com.home.client.gin.ClientModule"/>
