@@ -9,7 +9,8 @@ public class StyleInjector {
     private final CssResource[] STYLES = new CssResource[] {
             AppResources.INSTANCE.appStyle(),
             AppResources.INSTANCE.loginPageStyle(),
-            AppResources.INSTANCE.lookUpStyle()
+            AppResources.INSTANCE.lookUpStyle(),
+            AppResources.INSTANCE.textBoxValidation()
     };
 
     @Inject
