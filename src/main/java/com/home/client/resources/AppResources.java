@@ -24,4 +24,7 @@ public interface AppResources extends ClientBundle {
 
     @Source("css/text-box-validation.css")
     TextBoxValidationStyle textBoxValidation();
+
+    @Source("css/error-note-popup.css")
+    ErrorNotePopUpStyle errorNotePopUpStyle();
 }

@@ -10,7 +10,8 @@ public class StyleInjector {
             AppResources.INSTANCE.appStyle(),
             AppResources.INSTANCE.loginPageStyle(),
             AppResources.INSTANCE.lookUpStyle(),
-            AppResources.INSTANCE.textBoxValidation()
+            AppResources.INSTANCE.textBoxValidation(),
+            AppResources.INSTANCE.errorNotePopUpStyle()
     };
 
     @Inject
