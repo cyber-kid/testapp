@@ -1,28 +1,4 @@
 .container {
-    background-color: lightpink;
-    border: solid 1px red;
-    box-sizing: border-box;
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 12px;
-    font-family: system-ui;
-}
-.mandatoryField:after {
-    content: "*";
-    color: red;
-    font-size: 1em;
-    top: -2px;
-    left: -6px;
-}
-.arrow {
-    width: 0;
-    height: 0;
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-    border-right:6px solid red;
-    position: absolute;
-}
-.mainContainer {
     display: flex;
     align-items: center;
 }

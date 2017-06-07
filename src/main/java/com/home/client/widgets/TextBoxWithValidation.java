@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
+import com.home.client.resources.ErrorNotePopUpStyle;
 import com.home.client.resources.TextBoxValidationStyle;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class TextBoxWithValidation extends Composite {
 
     private static final AppResources BUNDLE = AppResources.INSTANCE;
     private final TextBoxValidationStyle STYLE = AppResources.INSTANCE.textBoxValidation();
+    private final ErrorNotePopUpStyle ERROR_STYLE = AppResources.INSTANCE.errorNotePopUpStyle();
     private boolean isValid = false;
     private boolean isMandatory = false;
     private Map<String, RegExp> checks = new HashMap<>();
@@ -55,7 +57,7 @@ public class TextBoxWithValidation extends Composite {
     @Override
     public void onLoad() {
         if(isMandatory) {
-            label.setStyleName(STYLE.mandatoryField(), true);
+            label.setStyleName(ERROR_STYLE.mandatoryField(), true);
         }
     }
 
@@ -130,8 +132,8 @@ public class TextBoxWithValidation extends Composite {
         FlowPanel container = new FlowPanel();
         SimplePanel arrow = new SimplePanel();
 
-        arrow.setStyleName(STYLE.arrow(), true);
-        container.setStyleName(STYLE.container(), true);
+        arrow.setStyleName(ERROR_STYLE.arrow(), true);
+        container.setStyleName(ERROR_STYLE.container(), true);
 
         container.add(arrow);
         errorLabels.forEach(container::add);

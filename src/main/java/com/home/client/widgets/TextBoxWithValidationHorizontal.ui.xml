@@ -4,7 +4,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="res" type="com.home.client.resources.AppResources" />
 
-    <g:FlowPanel addStyleNames="{res.textBoxValidation.mainContainer}">
+    <g:FlowPanel addStyleNames="{res.textBoxValidation.container}">
         <g:Label ui:field="label" addStyleNames="{res.textBoxValidation.label}"/>
         <g:TextBox ui:field="input" addStyleNames="{res.textBoxValidation.text}"/>
         <g:Image ui:field="checkFlag" addStyleNames="{res.textBoxValidation.icon}" visible="false"/>
