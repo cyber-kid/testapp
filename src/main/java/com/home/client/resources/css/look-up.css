@@ -5,9 +5,11 @@
     border : rgba(63,70,98, .4) solid 1px;
     box-sizing : border-box;
     min-height: 19px;
+    background-color: white;
 }
 .textBox {
     border: rgba(63,70,98, .4) solid 1px;
+    margin-right: 5px;
     outline: none;
     padding: 0px 5px;
 }
@@ -27,4 +29,8 @@
 }
 .vertical {
     flex-direction: column;
+}
+.icon {
+    width: 15px;
+    height: 15px;
 }

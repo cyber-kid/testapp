@@ -11,4 +11,5 @@ public interface LookUpStyle extends CssResource{
     String label();
     String horizontal();
     String vertical();
+    String icon();
 }

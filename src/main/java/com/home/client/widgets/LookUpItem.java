@@ -36,15 +36,9 @@ public class LookUpItem<T> extends Composite implements HasText,
     }
 
     @UiHandler("item")
-    public void onItemClick(ClickEvent event) {
+    public void onItemClick(MouseDownEvent event) {
+        event.preventDefault();
         SelectionEvent.fire(this, item.getText());
-    }
-
-    @UiHandler("main")
-    public void onEnterKeyPress(KeyDownEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-            SelectionEvent.fire(this, item.getText());
-        }
     }
 
     @Override

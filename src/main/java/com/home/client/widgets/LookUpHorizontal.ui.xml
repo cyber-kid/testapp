@@ -7,5 +7,6 @@
     <g:FlowPanel addStyleNames="{res.lookUpStyle.container} {res.lookUpStyle.horizontal}">
         <g:Label ui:field="lookUpLabel" addStyleNames="{res.lookUpStyle.text} {res.lookUpStyle.label}"/>
         <g:TextBox ui:field="input" addStyleNames="{res.lookUpStyle.textBox} {res.lookUpStyle.text}"/>
+        <g:Image ui:field="checkFlag" addStyleNames="{res.lookUpStyle.icon}" visible="false"/>
     </g:FlowPanel>
 </ui:UiBinder>
