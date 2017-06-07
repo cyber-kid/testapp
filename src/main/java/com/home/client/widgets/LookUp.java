@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
+import com.home.client.resources.ErrorNotePopUpStyle;
 import com.home.client.resources.LookUpStyle;
 import com.home.client.utils.KeyCodesHelper;
 
@@ -33,12 +34,18 @@ public class LookUp<T> extends Composite implements HasText,
     private List<LookUpItem<T>> items = new ArrayList<>();
     private int focusedItemIndex = -1;
     private final LookUpStyle STYLE = AppResources.INSTANCE.lookUpStyle();
+    private static final AppResources BUNDLE = AppResources.INSTANCE;
+    private final ErrorNotePopUpStyle ERROR_STYLE = AppResources.INSTANCE.errorNotePopUpStyle();
     private T model;
+    private boolean isMandatory = false;
+    private boolean isValid = false;
 
     @UiField
     public TextBox input;
     @UiField
     public Label lookUpLabel;
+    @UiField
+    public Image checkFlag;
 
     @UiConstructor
     public LookUp(boolean vertical) {
@@ -48,6 +55,13 @@ public class LookUp<T> extends Composite implements HasText,
             initWidget(horizontalUiBinder.createAndBindUi(this));
         }
         initiateDropDown();
+    }
+
+    @Override
+    protected void onLoad() {
+        if(isMandatory) {
+            lookUpLabel.setStyleName(ERROR_STYLE.mandatoryField(), true);
+        }
     }
 
     @UiHandler("input")
@@ -60,6 +74,15 @@ public class LookUp<T> extends Composite implements HasText,
     public void onTextBoxFocus(FocusEvent event) {
         positionPopUp();
         showDropDown();
+    }
+
+    @UiHandler("input")
+    public void onBlur(BlurEvent blurEvent) {
+        validate(input.getText());
+        setIcon();
+        if(!isValid) {
+            showNoteWithErrors();
+        }
     }
 
     private void positionPopUp() {
@@ -104,7 +127,6 @@ public class LookUp<T> extends Composite implements HasText,
 
     private void filterDropDown(final String searchStr) {
         panel.clear();
-        /*if (searchStr != null || searchStr.length() != 0) {*/
         if (!Strings.isNullOrEmpty(searchStr)) {
             items.stream().filter(i -> i.getText().startsWith(searchStr)).forEach(panel::add);
         } else {
@@ -232,5 +254,54 @@ public class LookUp<T> extends Composite implements HasText,
         if (item instanceof LookUpItem) {
             model = ((LookUpItem<T>)item).getModel();
         }
+    }
+
+    public boolean isMandatory() {
+        return isMandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        isMandatory = mandatory;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    private void validate(String str) {
+        isValid = !str.isEmpty();
+    }
+
+    private void setIcon () {
+        if (isValid) {
+            checkFlag.setResource(BUNDLE.successIcon());
+        } else {
+            checkFlag.setResource(BUNDLE.failureIcon());
+        }
+        checkFlag.setVisible(true);
+    }
+
+    private void showNoteWithErrors() {
+        PopupPanel note = new PopupPanel();
+        FlowPanel container = new FlowPanel();
+        SimplePanel arrow = new SimplePanel();
+
+        arrow.setStyleName(ERROR_STYLE.arrow(), true);
+        container.setStyleName(ERROR_STYLE.container(), true);
+
+        container.add(arrow);
+        container.add(new Label("This field is mandatory and can not be empty."));
+        note.add(container);
+
+        note.setAutoHideEnabled(true);
+        note.show();
+
+        int noteTop = input.getAbsoluteTop() + (input.getOffsetHeight()/2) - note.getOffsetHeight()/2;
+        int arrowTop = note.getOffsetHeight()/2 - arrow.getOffsetHeight()/2;
+        int arrowLeft = 0 - arrow.getOffsetWidth();
+
+        arrow.getElement().getStyle().setPropertyPx("top", arrowTop);
+        arrow.getElement().getStyle().setPropertyPx("left", arrowLeft);
+        note.setPopupPosition(checkFlag.getAbsoluteLeft() + checkFlag.getWidth() + 10, noteTop);
     }
 }
