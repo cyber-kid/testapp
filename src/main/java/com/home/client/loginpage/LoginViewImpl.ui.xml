@@ -4,10 +4,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="res" type="com.home.client.resources.AppResources" />
 
-    <ui:style>
-
-    </ui:style>
-
     <g:FlowPanel addStyleNames="{res.loginPageStyle.container}">
         <g:Label text="User name:" addStyleNames="{res.loginPageStyle.textLabel}"/>
         <g:TextBox ui:field="username"/>
