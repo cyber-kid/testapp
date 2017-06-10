@@ -22,12 +22,15 @@ public class TextBoxWithValidation extends Composite {
     TextBox input;
     @UiField
     Image checkFlag;
+    @UiField
+    PasswordTextBox password;
 
     private static final AppResources BUNDLE = AppResources.INSTANCE;
     private final ErrorNotePopUpStyle ERROR_STYLE = AppResources.INSTANCE.errorNotePopUpStyle();
 
     private boolean isValid = false;
     private boolean isMandatory = false;
+    private boolean isPassword = false;
 
     private Map<String, RegExp> checks = new HashMap<>();
     private List<String> errorMessages = new ArrayList<>();
@@ -54,11 +57,33 @@ public class TextBoxWithValidation extends Composite {
         if(isMandatory) {
             label.setStyleName(ERROR_STYLE.mandatoryField(), true);
         }
+        if(isPassword) {
+            password.setVisible(true);
+        } else {
+            input.setVisible(true);
+        }
+    }
+
+    public String getText() {
+        if(isPassword) {
+            return password.getText();
+        } else {
+            return input.getText();
+        }
     }
 
     @UiHandler("input")
-    public void onBlur(BlurEvent blurEvent) {
+    public void onInputBlur(BlurEvent blurEvent) {
         validate(input.getText());
+        setIcon();
+        if(!isValid) {
+            showNoteWithErrors();
+        }
+    }
+
+    @UiHandler("password")
+    public void onPasswordBlur(BlurEvent blurEvent) {
+        validate(password.getText());
         setIcon();
         if(!isValid) {
             showNoteWithErrors();
@@ -105,7 +130,12 @@ public class TextBoxWithValidation extends Composite {
         note.setAutoHideEnabled(true);
         note.show();
 
-        int noteTop = input.getAbsoluteTop() + (input.getOffsetHeight()/2) - note.getOffsetHeight()/2;
+        int noteTop = 0;
+        if(isPassword) {
+            noteTop = password.getAbsoluteTop() + (password.getOffsetHeight()/2) - note.getOffsetHeight()/2;
+        } else {
+            noteTop = input.getAbsoluteTop() + (input.getOffsetHeight() / 2) - note.getOffsetHeight() / 2;
+        }
         int arrowTop = note.getOffsetHeight()/2 - arrow.getOffsetHeight()/2;
         int arrowLeft = 0 - arrow.getOffsetWidth();
 
@@ -140,5 +170,9 @@ public class TextBoxWithValidation extends Composite {
 
     public void addCheck(String message, RegExp pattern) {
         checks.put(message, pattern);
+    }
+
+    public void setPassword(boolean password) {
+        isPassword = password;
     }
 }

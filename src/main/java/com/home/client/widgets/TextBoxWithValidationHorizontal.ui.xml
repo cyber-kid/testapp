@@ -6,7 +6,8 @@
 
     <g:FlowPanel addStyleNames="{res.textBoxValidation.widgetContainer} {res.textBoxValidation.widget}">
         <g:Label ui:field="label" addStyleNames="{res.textBoxValidation.label} {res.appStyle.text}"/>
-        <g:TextBox ui:field="input" addStyleNames="{res.appStyle.textBox} {res.appStyle.text}"/>
+        <g:TextBox ui:field="input" addStyleNames="{res.appStyle.textBox} {res.appStyle.text}" visible="false"/>
+        <g:PasswordTextBox ui:field="password" addStyleNames="{res.appStyle.textBox} {res.appStyle.text}" visible="false"/>
         <g:Image ui:field="checkFlag" addStyleNames="{res.textBoxValidation.icon}" visible="false"/>
     </g:FlowPanel>
 </ui:UiBinder>
