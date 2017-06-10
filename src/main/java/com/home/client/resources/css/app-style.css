@@ -7,3 +7,12 @@ html, body {
     align-items: center;
     height: 100%;
 }
+.text {
+    font-size: 15px;
+    font-family: system-ui;
+}
+.textBox {
+    border: rgba(63,70,98, .4) solid 1px;
+    outline: none;
+    padding: 0px 5px;
+}
