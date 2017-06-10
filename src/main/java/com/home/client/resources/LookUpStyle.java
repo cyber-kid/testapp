@@ -5,11 +5,9 @@ import com.google.gwt.resources.client.CssResource;
 public interface LookUpStyle extends CssResource{
     String focusedItem();
     String dropDown();
-    String textBox();
-    String container();
-    String text();
+    String widgetContainer();
     String label();
-    String horizontal();
-    String vertical();
     String icon();
+    String containerPanel();
+    String widget();
 }

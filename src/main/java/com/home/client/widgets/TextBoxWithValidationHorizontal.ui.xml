@@ -4,9 +4,9 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="res" type="com.home.client.resources.AppResources" />
 
-    <g:FlowPanel addStyleNames="{res.textBoxValidation.container}">
-        <g:Label ui:field="label" addStyleNames="{res.textBoxValidation.label}"/>
-        <g:TextBox ui:field="input" addStyleNames="{res.textBoxValidation.text}"/>
+    <g:FlowPanel addStyleNames="{res.textBoxValidation.widgetContainer} {res.textBoxValidation.widget}">
+        <g:Label ui:field="label" addStyleNames="{res.textBoxValidation.label} {res.appStyle.text}"/>
+        <g:TextBox ui:field="input" addStyleNames="{res.appStyle.textBox} {res.appStyle.text}"/>
         <g:Image ui:field="checkFlag" addStyleNames="{res.textBoxValidation.icon}" visible="false"/>
     </g:FlowPanel>
 </ui:UiBinder>
