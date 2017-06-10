@@ -3,6 +3,10 @@ package com.home.client.widgets;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
@@ -15,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class TextBoxWithValidation extends Composite {
+public class TextBoxWithValidation extends Composite implements HasValueChangeHandlers<String> {
     @UiField
     Label label;
     @UiField
@@ -53,6 +57,11 @@ public class TextBoxWithValidation extends Composite {
     }
 
     @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> valueChangeHandler) {
+        return addHandler(valueChangeHandler, ValueChangeEvent.getType());
+    }
+
+    @Override
     public void onLoad() {
         if(isMandatory) {
             label.setStyleName(ERROR_STYLE.mandatoryField(), true);
@@ -79,6 +88,7 @@ public class TextBoxWithValidation extends Composite {
         if(!isValid) {
             showNoteWithErrors();
         }
+        ValueChangeEvent.fire(this, input.getText());
     }
 
     @UiHandler("password")
@@ -88,6 +98,7 @@ public class TextBoxWithValidation extends Composite {
         if(!isValid) {
             showNoteWithErrors();
         }
+        ValueChangeEvent.fire(this, password.getText());
     }
 
     private void setIcon () {
