@@ -3,10 +3,11 @@ package com.home.client.widgets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.*;
 import com.google.common.base.Strings;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
 import com.home.client.resources.ErrorNotePopUpStyle;
@@ -20,7 +21,15 @@ import java.util.List;
 public class LookUp<T> extends Composite implements HasText,
         HasWidgets,
         SelectionHandler<String>,
-        MouseOverHandler {
+        MouseOverHandler,
+        HasValueChangeHandlers<T> {
+    @UiField
+    public TextBox input;
+    @UiField
+    public Label label;
+    @UiField
+    public Image checkFlag;
+
     @UiTemplate("LookUpHorizontal.ui.xml")
     interface UiBinderHorizontal extends UiBinder<Widget, LookUp> {}
     private static UiBinderHorizontal horizontalUiBinder = GWT.create(UiBinderHorizontal.class);
@@ -31,21 +40,17 @@ public class LookUp<T> extends Composite implements HasText,
 
     private PopupPanel dropDown = new PopupPanel();
     private FlowPanel panel = new FlowPanel();
-    private List<LookUpItem<T>> items = new ArrayList<>();
-    private int focusedItemIndex = -1;
+
     private final LookUpStyle STYLE = AppResources.INSTANCE.lookUpStyle();
     private static final AppResources BUNDLE = AppResources.INSTANCE;
     private final ErrorNotePopUpStyle ERROR_STYLE = AppResources.INSTANCE.errorNotePopUpStyle();
+
     private T model;
     private boolean isMandatory = false;
     private boolean isValid = false;
-
-    @UiField
-    public TextBox input;
-    @UiField
-    public Label lookUpLabel;
-    @UiField
-    public Image checkFlag;
+    private List<LookUpItem<T>> items = new ArrayList<>();
+    private LookUpItem<T> selectedItem;
+    private int focusedItemIndex = 0;
 
     @UiConstructor
     public LookUp(boolean vertical) {
@@ -54,40 +59,34 @@ public class LookUp<T> extends Composite implements HasText,
         } else {
             initWidget(horizontalUiBinder.createAndBindUi(this));
         }
-        initiateDropDown();
     }
 
     @Override
     protected void onLoad() {
         if(isMandatory) {
-            lookUpLabel.setStyleName(ERROR_STYLE.mandatoryField(), true);
+            label.setStyleName(ERROR_STYLE.mandatoryField(), true);
         }
+        initiateDropDown();
+        positionDropDown();
     }
 
     @UiHandler("input")
     public void onClick (ClickEvent clickEvent) {
-        positionPopUp();
-        showDropDown();
+        if(!dropDown.isShowing()) {
+            showDropDown();
+        }
     }
 
     @UiHandler("input")
     public void onTextBoxFocus(FocusEvent event) {
-        positionPopUp();
-        showDropDown();
+        if(!dropDown.isShowing()) {
+            showDropDown();
+        }
     }
 
     @UiHandler("input")
     public void onBlur(BlurEvent blurEvent) {
-        validate(input.getText());
-        setIcon();
-        if(!isValid) {
-            showNoteWithErrors();
-        }
-    }
-
-    private void positionPopUp() {
-        dropDown.setPopupPosition(input.getAbsoluteLeft(), input.getAbsoluteTop() + input.getOffsetHeight());
-        dropDown.getElement().getStyle().setWidth(input.getOffsetWidth(), Style.Unit.PX);
+        setText(input.getText());
     }
 
     @UiHandler("input")
@@ -95,102 +94,53 @@ public class LookUp<T> extends Composite implements HasText,
         int keyCode = event.getNativeEvent().getKeyCode();
 
         if (keyCode == KeyCodes.KEY_ENTER) {
-            setText(getTextFromFocusedItem());
+            selectItem();
             hideDropDown();
         }
-        if (KeyCodesHelper.isLetterKey(keyCode) || keyCode == KeyCodes.KEY_BACKSPACE) {
-            Object eventSource = event.getSource();
-            if (eventSource instanceof TextBox) {
-                TextBox i = (TextBox) eventSource;
-                filterDropDown(i.getText());
-            }
+
+        if (KeyCodesHelper.isLetterKey(keyCode) || KeyCodesHelper.isDigitKey(keyCode) || keyCode == KeyCodes.KEY_BACKSPACE) {
+            showDropDown();
         }
     }
 
     @UiHandler("input")
     public void onArrowsKeyDown (KeyDownEvent keyDownEvent) {
+        int keyCode = keyDownEvent.getNativeEvent().getKeyCode();
+
         if (keyDownEvent.isUpArrow()) {
             keyDownEvent.preventDefault();
             focusPreviousItem();
         }
+        
         if(keyDownEvent.isDownArrow()) {
-            showDropDown();
-            focusNextItem();
+            if(!dropDown.isShowing()) {
+                showDropDown();
+            } else {
+                focusNextItem();
+            }
         }
-    }
 
-    private void initiateDropDown() {
-        dropDown.setStyleName(STYLE.dropDown(), true);
-        dropDown.setAutoHideEnabled(true);
-        dropDown.add(panel);
-    }
-
-    private void filterDropDown(final String searchStr) {
-        panel.clear();
-        if (!Strings.isNullOrEmpty(searchStr)) {
-            items.stream().filter(i -> i.getText().startsWith(searchStr)).forEach(panel::add);
-        } else {
-            items.stream().forEach(panel::add);
+        if (keyCode == KeyCodes.KEY_TAB) {
+            hideDropDown();
         }
-        showDropDown();
     }
 
     @Override
     public void onSelection(SelectionEvent<String> selectionEvent) {
-        setText(selectionEvent.getSelectedItem());
+        selectItem();
         hideDropDown();
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler valueChangeHandler) {
+        return addHandler(valueChangeHandler, ValueChangeEvent.getType());
     }
 
     @Override
     public void onMouseOver(MouseOverEvent mouseOverEvent) {
         Object eventSource = mouseOverEvent.getSource();
         if (eventSource instanceof LookUpItem) {
-            focusItem((LookUpItem<T>)eventSource);
-        }
-    }
-
-    private void unFocusItem() {
-        if (focusedItemIndex >= 0) {
-            panel.getWidget(focusedItemIndex).setStyleName(STYLE.focusedItem(), false);
-        }
-    }
-
-    private void focusItem (LookUpItem<T> item) {
-        unFocusItem();
-        item.setStyleName(STYLE.focusedItem(), true);
-        focusedItemIndex = panel.getWidgetIndex(item);
-    }
-
-    private void focusNextItem () {
-        unFocusItem();
-        if (focusedItemIndex == panel.getWidgetCount() - 1) {
-            focusedItemIndex = -1;
-        }
-
-        panel.getWidget(++focusedItemIndex).setStyleName(STYLE.focusedItem(), true);
-    }
-
-    private void focusPreviousItem () {
-        unFocusItem();
-        if (focusedItemIndex == 0 || focusedItemIndex == -1) {
-            focusedItemIndex = panel.getWidgetCount();
-        }
-        panel.getWidget(--focusedItemIndex).setStyleName(STYLE.focusedItem(), true);
-    }
-
-    private void hideDropDown () {
-        dropDown.hide();
-        unFocusItem();
-    }
-
-    private String getTextFromFocusedItem() {
-        return ((LookUpItem<T>)panel.getWidget(focusedItemIndex)).getText();
-    }
-
-    private void showDropDown() {
-        if (!dropDown.isShowing()) {
-            focusedItemIndex = -1;
-            dropDown.show();
+            focusItem((LookUpItem<T>) eventSource);
         }
     }
 
@@ -202,6 +152,11 @@ public class LookUp<T> extends Composite implements HasText,
     @Override
     public void setText(String s) {
         input.setText(s);
+        validate(s);
+        setIcon();
+        if(!isValid) {
+            showErrorNote();
+        }
     }
 
     @Override
@@ -236,36 +191,50 @@ public class LookUp<T> extends Composite implements HasText,
         return items.remove(widget) && panel.remove(widget);
     }
 
-    public String getLookUpLabelText() {
-        return lookUpLabel.getText();
+    private void unFocusItem() {
+        removeFocusStyle();
     }
 
-    public void setLookUpLabelText(String lookUpLabelText) {
-        lookUpLabel.setText(lookUpLabelText);
+    private void focusFirstItem() {
+        focusedItemIndex = 0;
+        addFocusStyle();
     }
 
-    public T getModel() {
-        getModelFromSelectedItem();
-        return model;
+    private void focusItem (LookUpItem<T> item) {
+        unFocusItem();
+        item.setStyleName(STYLE.focusedItem(), true);
+        focusedItemIndex = panel.getWidgetIndex(item);
     }
 
-    private void getModelFromSelectedItem() {
-        Widget item = panel.getWidget(focusedItemIndex);
-        if (item instanceof LookUpItem) {
-            model = ((LookUpItem<T>)item).getModel();
+    private void focusNextItem () {
+        unFocusItem();
+        if (focusedItemIndex == panel.getWidgetCount() - 1) {
+            focusFirstItem();
+        } else {
+            focusedItemIndex++;
+            addFocusStyle();
         }
     }
 
-    public boolean isMandatory() {
-        return isMandatory;
+    private void focusPreviousItem () {
+        unFocusItem();
+        if (focusedItemIndex == 0) {
+            focusedItemIndex = panel.getWidgetCount();
+        }
+        focusedItemIndex--;
+        addFocusStyle();
     }
 
-    public void setMandatory(boolean mandatory) {
-        isMandatory = mandatory;
+    private void hideDropDown () {
+        unFocusItem();
+        dropDown.hide();
     }
 
-    public boolean isValid() {
-        return isValid;
+    private void showDropDown() {
+        unFocusItem();
+        filterDropDown(input.getText());
+        focusFirstItem();
+        dropDown.show();
     }
 
     private void validate(String str) {
@@ -281,7 +250,7 @@ public class LookUp<T> extends Composite implements HasText,
         checkFlag.setVisible(true);
     }
 
-    private void showNoteWithErrors() {
+    private void showErrorNote() {
         PopupPanel note = new PopupPanel();
         FlowPanel container = new FlowPanel();
         SimplePanel arrow = new SimplePanel();
@@ -304,4 +273,79 @@ public class LookUp<T> extends Composite implements HasText,
         arrow.getElement().getStyle().setPropertyPx("left", arrowLeft);
         note.setPopupPosition(checkFlag.getAbsoluteLeft() + checkFlag.getWidth() + 10, noteTop);
     }
+
+    private void positionDropDown() {
+        dropDown.setPopupPosition(input.getAbsoluteLeft(), input.getAbsoluteTop() + input.getOffsetHeight());
+        dropDown.getElement().getStyle().setWidth(input.getOffsetWidth(), Style.Unit.PX);
+    }
+
+    private void initiateDropDown() {
+        dropDown.setStyleName(STYLE.dropDown(), true);
+        dropDown.setAutoHideEnabled(true);
+        dropDown.add(panel);
+    }
+
+    private void filterDropDown(final String searchStr) {
+        panel.clear();
+        if (!Strings.isNullOrEmpty(searchStr)) {
+            items.stream().filter(i -> i.getText().startsWith(searchStr)).forEach(panel::add);
+        } else {
+            items.forEach(panel::add);
+        }
+    }
+
+    private void removeFocusStyle() {
+        panel.getWidget(focusedItemIndex).setStyleName(STYLE.focusedItem(), false);
+    }
+
+    private void addFocusStyle() {
+        panel.getWidget(focusedItemIndex).setStyleName(STYLE.focusedItem(), true);
+    }
+
+    public String getLabelText() {
+        return label.getText();
+    }
+
+    public void setLabelText(String lookUpLabelText) {
+        label.setText(lookUpLabelText);
+    }
+
+    public T getModel() {
+        return model;
+    }
+
+    private void setModel(T model) {
+        this.model = model;
+    }
+
+    public boolean isMandatory() {
+        return isMandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        isMandatory = mandatory;
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    private void setSelectedItem(LookUpItem<T> item) {
+        selectedItem = item;
+    }
+
+    private void selectItem() {
+        Widget item = panel.getWidget(focusedItemIndex);
+        if (item instanceof LookUpItem) {
+            selectedItem = (LookUpItem<T>)item;
+            setModel(selectedItem.getModel());
+            setText(selectedItem.getText());
+            ValueChangeEvent.fire(this, getModel());
+        }
+    }
+
+    public void setTabIndex(int index) {
+        input.setTabIndex(index);
+    }
+
 }

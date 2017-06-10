@@ -7,30 +7,23 @@
     min-height: 19px;
     background-color: white;
 }
-.textBox {
-    border: rgba(63,70,98, .4) solid 1px;
-    margin-right: 5px;
-    outline: none;
-    padding: 0px 5px;
-}
-.container {
+.widgetContainer {
     display: flex;
+    align-items: center;
 }
-.text {
-    font-size: 15px;
-    font-family: system-ui;
+.widget {
+    padding-bottom: 5px;
 }
 .label {
     margin-right: 5px;
 }
-.horizontal {
+.icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+}
+.containerPanel {
+    display: flex;
     flex-direction: row;
     align-items: center;
-}
-.vertical {
-    flex-direction: column;
-}
-.icon {
-    width: 15px;
-    height: 15px;
 }

@@ -4,9 +4,11 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="res" type="com.home.client.resources.AppResources" />
 
-    <g:FlowPanel>
-        <g:Label ui:field="lookUpLabel" addStyleNames="{res.lookUpStyle.text} {res.lookUpStyle.label}"/>
-        <g:TextBox ui:field="input" addStyleNames="{res.lookUpStyle.textBox} {res.lookUpStyle.text}"/>
-        <g:Image ui:field="checkFlag" addStyleNames="{res.lookUpStyle.icon}" visible="false"/>
+    <g:FlowPanel addStyleNames="{res.lookUpStyle.widget}">
+        <g:Label ui:field="label" addStyleNames="{res.appStyle.text} {res.lookUpStyle.label}"/>
+        <g:FlowPanel addStyleNames="{res.lookUpStyle.containerPanel}">
+            <g:TextBox ui:field="input" addStyleNames="{res.appStyle.textBox} {res.appStyle.text}"/>
+            <g:Image ui:field="checkFlag" addStyleNames="{res.lookUpStyle.icon}" visible="false"/>
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>
