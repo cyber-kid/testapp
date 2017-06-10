@@ -45,6 +45,11 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     }
 
     @Override
+    protected void onReveal() {
+        getView().removeErrorNote();
+    }
+
+    @Override
     public void confirm(String username, String password) {
         if (validateCredentials(username, password)) {
             currentUser.setLoggedIn();
