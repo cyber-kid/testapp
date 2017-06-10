@@ -3,9 +3,9 @@ package com.home.client.widgets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.*;
 import com.google.common.base.Strings;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.*;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
@@ -20,7 +20,8 @@ import java.util.List;
 public class LookUp<T> extends Composite implements HasText,
         HasWidgets,
         SelectionHandler<String>,
-        MouseOverHandler {
+        MouseOverHandler,
+        HasValueChangeHandlers<String> {
     @UiField
     public TextBox input;
     @UiField
@@ -85,6 +86,7 @@ public class LookUp<T> extends Composite implements HasText,
         if(!isValid) {
             showErrorNote();
         }
+        ValueChangeEvent.fire(this, input.getText());
     }
 
     @UiHandler("input")
@@ -120,6 +122,11 @@ public class LookUp<T> extends Composite implements HasText,
     public void onSelection(SelectionEvent<String> selectionEvent) {
         setText(selectionEvent.getSelectedItem());
         hideDropDown();
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler valueChangeHandler) {
+        return addHandler(valueChangeHandler, ValueChangeEvent.getType());
     }
 
     @Override
