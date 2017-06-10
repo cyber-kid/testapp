@@ -21,7 +21,7 @@ public class LookUp<T> extends Composite implements HasText,
         HasWidgets,
         SelectionHandler<String>,
         MouseOverHandler,
-        HasValueChangeHandlers<String> {
+        HasValueChangeHandlers<T> {
     @UiField
     public TextBox input;
     @UiField
@@ -86,7 +86,7 @@ public class LookUp<T> extends Composite implements HasText,
         if(!isValid) {
             showErrorNote();
         }
-        ValueChangeEvent.fire(this, input.getText());
+        ValueChangeEvent.fire(this, getModel());
     }
 
     @UiHandler("input")
@@ -97,7 +97,7 @@ public class LookUp<T> extends Composite implements HasText,
             setText(getTextFromFocusedItem());
             hideDropDown();
         }
-        if (KeyCodesHelper.isLetterKey(keyCode) || keyCode == KeyCodes.KEY_BACKSPACE) {
+        if (KeyCodesHelper.isLetterKey(keyCode) || KeyCodesHelper.isDigitKey(keyCode) || keyCode == KeyCodes.KEY_BACKSPACE) {
             Object eventSource = event.getSource();
             if (eventSource instanceof TextBox) {
                 TextBox i = (TextBox) eventSource;
@@ -145,6 +145,8 @@ public class LookUp<T> extends Composite implements HasText,
     @Override
     public void setText(String s) {
         input.setText(s);
+        validate(s);
+        setIcon();
     }
 
     @Override
@@ -184,8 +186,6 @@ public class LookUp<T> extends Composite implements HasText,
             removeFocusStyle();
         }
     }
-
-
 
     private void focusItem (LookUpItem<T> item) {
         unFocusItem();
