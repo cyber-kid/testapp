@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class TextBoxWithValidation extends Composite implements HasValueChangeHandlers<String> {
+public class TextBoxWithValidation extends Composite implements HasValueChangeHandlers<String>, HasText {
     @UiField
     Label label;
     @UiField
@@ -73,6 +73,16 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
         }
     }
 
+    @Override
+    public void setText(String s) {
+        if(!isPassword) {
+            input.setText(s);
+            validate(s);
+            setIcon();
+        }
+    }
+
+    @Override
     public String getText() {
         if(isPassword) {
             return password.getText();
