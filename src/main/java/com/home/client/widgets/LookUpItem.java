@@ -10,8 +10,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 
 public class LookUpItem<T> extends Composite implements HasText,
-        HasSelectionHandlers<String>,
-        HasMouseOverHandlers {
+        HasSelectionHandlers<LookUpItem<T>>,
+        HasMouseOverHandlers,
+        Comparable<LookUpItem<T>> {
     interface Binder extends UiBinder<Widget, LookUpItem> {}
 
     private static Binder uiBinder = GWT.create(Binder.class);
@@ -38,11 +39,30 @@ public class LookUpItem<T> extends Composite implements HasText,
     @UiHandler("item")
     public void onItemClick(MouseDownEvent event) {
         event.preventDefault();
-        SelectionEvent.fire(this, item.getText());
+        SelectionEvent.fire(this, this);
     }
 
     @Override
-    public HandlerRegistration addSelectionHandler(SelectionHandler<String> selectionHandler) {
+    public int compareTo(LookUpItem<T> o) {
+        return this.getText().compareTo(o.getText());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        LookUpItem<T> other = (LookUpItem<T>) obj;
+        if (!getText().equals(other.getText()))
+            return false;
+        return true;
+    }
+
+    @Override
+    public HandlerRegistration addSelectionHandler(SelectionHandler<LookUpItem<T>> selectionHandler) {
         return addHandler(selectionHandler, SelectionEvent.getType());
     }
 
