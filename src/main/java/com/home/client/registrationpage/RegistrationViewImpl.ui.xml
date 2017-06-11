@@ -1,9 +1,19 @@
 <!DOCTYPE ui:UiBinder SYSTEM
         "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:w='urn:import:com.home.client.widgets'>
 
     <g:FlowPanel>
         <g:Label>Registration Form!</g:Label>
+        <w:TextBoxWithValidation ui:field="firstName" vertical="false" labelText="Firts name:" mandatory="true" tabIndex="1"/>
+        <w:TextBoxWithValidation ui:field="lastName" vertical="false" labelText="Last name:" mandatory="true" tabIndex="2"/>
+        <w:TextBoxWithValidation ui:field="email" vertical="false" labelText="email address:" mandatory="true" tabIndex="3"/>
+        <w:TextBoxWithValidation ui:field="password" vertical="false" password="true" labelText="Password:" mandatory="true" tabIndex="4"/>
+        <w:TextBoxWithValidation ui:field="passwordConfirmation" vertical="false" password="true" labelText="Password confirmation:" mandatory="true" tabIndex="5"/>
+        <w:LookUp ui:field="day" vertical="false" mandatory="true" labelText="Day of birth:" tabIndex="6"/>
+        <w:LookUp ui:field="month" vertical="false" mandatory="true" labelText="Month of birth:" tabIndex="7"/>
+        <w:LookUp ui:field="year" vertical="false" mandatory="true" labelText="Year of birth:" tabIndex="8"/>
+        <g:Button ui:field="submit" visible="true" enabled="false" text="Sign Up" tabIndex="9"/>
     </g:FlowPanel>
 </ui:UiBinder>
