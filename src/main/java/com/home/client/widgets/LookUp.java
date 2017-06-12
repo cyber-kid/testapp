@@ -172,6 +172,14 @@ public class LookUp<T> extends Composite implements HasText,
     public void clear() {
         items.clear();
         panel.clear();
+
+    }
+
+    public void reset() {
+        errorNote.clear();
+        checkFlag.setVisible(false);
+        input.setText("");
+        setSelectedItem(null);
     }
 
     @Override
