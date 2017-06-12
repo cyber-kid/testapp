@@ -3,15 +3,12 @@ package com.home.client.widgets;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
 import com.home.client.resources.ErrorNotePopUpStyle;
@@ -41,6 +38,7 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
 
     private Map<String, RegExp> checks = new HashMap<>();
     private List<String> errorMessages = new ArrayList<>();
+    private PopupPanel errorNote = new PopupPanel();
 
     @UiTemplate("TextBoxWithValidationHorizontal.ui.xml")
     interface UiBinderHorizontal extends UiBinder<Widget, TextBoxWithValidation> {}
@@ -80,8 +78,6 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
     public void setText(String s) {
         if(!isPassword) {
             input.setText(s);
-            validate(s);
-            setIcon();
         }
     }
 
@@ -125,7 +121,7 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
 
     private void validate(String str) {
         errorMessages.clear();
-        if(isMandatory() && Strings.isNullOrEmpty(str)) {
+        if(isMandatory && Strings.isNullOrEmpty(str)) {
             errorMessages.add("This field is mandatory and can not be empty.");
         } else if (!Strings.isNullOrEmpty(str)) {
             BiConsumer<String, RegExp> action = (s, p) -> {
@@ -140,7 +136,7 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
     }
 
     private void showNoteWithErrors() {
-        PopupPanel note = new PopupPanel();
+        errorNote.clear();
         FlowPanel container = new FlowPanel();
         SimplePanel arrow = new SimplePanel();
 
@@ -149,23 +145,23 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
 
         container.add(arrow);
         errorMessages.forEach(s -> container.add(new Label(s)));
-        note.add(container);
+        errorNote.add(container);
 
-        note.setAutoHideEnabled(true);
-        note.show();
+        errorNote.setAutoHideEnabled(true);
+        errorNote.show();
 
-        int noteTop = 0;
+        int noteTop;
         if(isPassword) {
-            noteTop = password.getAbsoluteTop() + (password.getOffsetHeight()/2) - note.getOffsetHeight()/2;
+            noteTop = password.getAbsoluteTop() + (password.getOffsetHeight()/2) - errorNote.getOffsetHeight()/2;
         } else {
-            noteTop = input.getAbsoluteTop() + (input.getOffsetHeight() / 2) - note.getOffsetHeight() / 2;
+            noteTop = input.getAbsoluteTop() + (input.getOffsetHeight() / 2) - errorNote.getOffsetHeight() / 2;
         }
-        int arrowTop = note.getOffsetHeight()/2 - arrow.getOffsetHeight()/2;
+        int arrowTop = errorNote.getOffsetHeight()/2 - arrow.getOffsetHeight()/2;
         int arrowLeft = 0 - arrow.getOffsetWidth();
 
         arrow.getElement().getStyle().setPropertyPx("top", arrowTop);
         arrow.getElement().getStyle().setPropertyPx("left", arrowLeft);
-        note.setPopupPosition(checkFlag.getAbsoluteLeft() + checkFlag.getWidth() + 10, noteTop);
+        errorNote.setPopupPosition(checkFlag.getAbsoluteLeft() + checkFlag.getWidth() + 10, noteTop);
     }
 
     public void setLabelText(String label) {
@@ -178,10 +174,6 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
 
     private void setValid(boolean valid) {
         isValid = valid;
-    }
-
-    public boolean isMandatory() {
-        return isMandatory;
     }
 
     public void setMandatory(boolean mandatory) {
@@ -206,5 +198,12 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
         } else {
             input.setTabIndex(index);
         }
+    }
+
+    public void reset() {
+            password.setText("");
+            input.setText("");
+            errorNote.clear();
+            checkFlag.setVisible(false);
     }
 }
