@@ -4,7 +4,7 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.home.client.ApplicationPresenter;
 import com.home.client.ApplicationView;
 import com.home.client.ApplicationViewImpl;
-import com.home.client.CurrentUser;
+import com.home.shared.CurrentUser;
 import com.home.client.homepage.HomePresenter;
 import com.home.client.homepage.HomeView;
 import com.home.client.homepage.HomeViewImpl;

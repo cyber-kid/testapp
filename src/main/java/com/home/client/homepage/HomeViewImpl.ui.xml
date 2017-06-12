@@ -5,5 +5,10 @@
 
     <g:FlowPanel>
         <g:Label>Hello world!</g:Label>
+        <g:Label ui:field="firstName" />
+        <g:Label ui:field="lastName" />
+        <g:Label ui:field="email" />
+        <g:Label ui:field="dob" />
+
     </g:FlowPanel>
 </ui:UiBinder>

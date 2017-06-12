@@ -1,5 +1,6 @@
 package com.home.client.loginpage;
 
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -9,7 +10,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.home.client.ApplicationPresenter;
-import com.home.client.CurrentUser;
+import com.home.shared.CurrentUser;
 import com.home.client.places.NameTokens;
 
 import javax.inject.Inject;
@@ -24,8 +25,8 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     }
 
     // Credentials are stored here for demo purpose only.
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "admin123";
+    //private static final String USERNAME = "admin";
+    //private static final String PASSWORD = "admin123";
 
     private PlaceManager placeManager;
     private CurrentUser currentUser;
@@ -65,7 +66,7 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     }
 
     private boolean validateCredentials(String username, String password) {
-        return username.equals(USERNAME) && password.equals(PASSWORD);
+        return username.equals(currentUser.getEmail()) && password.equals(currentUser.getPassword());
     }
 
     @Override
