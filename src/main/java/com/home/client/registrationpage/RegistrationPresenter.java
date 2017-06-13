@@ -237,10 +237,10 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     }
 
     private void addNamesCheck() {
-        RegExp namesPattern = RegExp.compile("^\\S+\\D$");
+        RegExp namesPattern = RegExp.compile("^[A-Za-z\\s]+$");
 
-        getView().getFirstName().addCheck("This field can not contain numbers.", namesPattern);
-        getView().getLastName().addCheck("This field can not contain numbers.", namesPattern);
+        getView().getFirstName().addCheck("This field can contain only letters.", namesPattern);
+        getView().getLastName().addCheck("This field can contain only letters.", namesPattern);
     }
 
     private void addPasswordCheck() {
