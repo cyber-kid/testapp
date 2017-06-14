@@ -27,4 +27,7 @@ public interface AppResources extends ClientBundle {
 
     @Source("css/error-note-popup.css")
     ErrorNotePopUpStyle errorNotePopUpStyle();
+
+    @Source("css/registration-page.css")
+    RegistrationPageStyle registrationStyle();
 }
