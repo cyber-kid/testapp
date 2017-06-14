@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.*;
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.*;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
 import com.home.client.resources.ErrorNotePopUpStyle;
@@ -37,6 +38,7 @@ public class LookUp<T> extends Composite implements HasText,
 
     private PopupPanel dropDown = new PopupPanel();
     private FlowPanel panel = new FlowPanel();
+    private ScrollPanel scrollPanel = new ScrollPanel(panel);
 
     private final LookUpStyle STYLE = AppResources.INSTANCE.lookUpStyle();
     private static final AppResources BUNDLE = AppResources.INSTANCE;
@@ -266,6 +268,17 @@ public class LookUp<T> extends Composite implements HasText,
         filterDropDown(input.getText());
         focusFirstItem();
         dropDown.show();
+        addScroll();
+    }
+
+    private void addScroll() {
+        int widgetCount = panel.getWidgetCount();
+        int dropDownHeight = panel.getWidget(0).getOffsetHeight();
+        if(widgetCount > 10) {
+            scrollPanel.setHeight(dropDownHeight * 10 + "px");
+        } else {
+            scrollPanel.setHeight(dropDownHeight * widgetCount + "px");
+        }
     }
 
     private void validate() {
@@ -332,9 +345,9 @@ public class LookUp<T> extends Composite implements HasText,
     }
 
     private void initiateDropDown() {
-        ScrollPanel scrollPanel = new ScrollPanel(panel);
+        //ScrollPanel scrollPanel = new ScrollPanel(panel);
         //scrollPanel.getElement().getStyle().setPropertyPx("minHeight", 21);
-        scrollPanel.setHeight("210px");
+        //scrollPanel.setHeight("210px");
         dropDown.setStyleName(STYLE.dropDown(), true);
         dropDown.setAutoHideEnabled(true);
         dropDown.add(scrollPanel);
