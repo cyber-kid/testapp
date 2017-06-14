@@ -15,7 +15,8 @@
     padding-bottom: 5px;
 }
 .label {
-    margin-right: 5px;
+    padding-right: 5px;
+    box-sizing: border-box;
 }
 .icon {
     width: 16px;

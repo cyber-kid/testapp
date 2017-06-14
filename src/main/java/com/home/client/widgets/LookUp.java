@@ -340,14 +340,11 @@ public class LookUp<T> extends Composite implements HasText,
     }
 
     private void positionDropDown() {
-        dropDown.setPopupPosition(input.getAbsoluteLeft(), input.getAbsoluteTop() + input.getOffsetHeight());
+        dropDown.setPopupPosition(label.getAbsoluteLeft() + label.getOffsetWidth(), input.getAbsoluteTop() + input.getOffsetHeight());
         dropDown.getElement().getStyle().setWidth(input.getOffsetWidth(), Style.Unit.PX);
     }
 
     private void initiateDropDown() {
-        //ScrollPanel scrollPanel = new ScrollPanel(panel);
-        //scrollPanel.getElement().getStyle().setPropertyPx("minHeight", 21);
-        //scrollPanel.setHeight("210px");
         dropDown.setStyleName(STYLE.dropDown(), true);
         dropDown.setAutoHideEnabled(true);
         dropDown.add(scrollPanel);
