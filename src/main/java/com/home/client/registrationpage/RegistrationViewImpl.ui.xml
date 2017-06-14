@@ -3,9 +3,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:w='urn:import:com.home.client.widgets'>
+    <ui:with field="res" type="com.home.client.resources.AppResources" />
 
-    <g:FlowPanel>
-        <g:Label>Registration Form!</g:Label>
+    <g:FlowPanel addStyleNames="{res.registrationStyle.container}">
         <w:TextBoxWithValidation ui:field="firstName" vertical="false" labelText="Firts name:" mandatory="true" tabIndex="1"/>
         <w:TextBoxWithValidation ui:field="lastName" vertical="false" labelText="Last name:" mandatory="true" tabIndex="2"/>
         <w:TextBoxWithValidation ui:field="email" vertical="false" labelText="email address:" mandatory="true" tabIndex="3"/>
@@ -14,8 +14,12 @@
         <w:LookUp ui:field="day" vertical="false" mandatory="true" labelText="Day of birth:" tabIndex="6"/>
         <w:LookUp ui:field="month" vertical="false" mandatory="true" labelText="Month of birth:" tabIndex="7"/>
         <w:LookUp ui:field="year" vertical="false" mandatory="true" labelText="Year of birth:" tabIndex="8"/>
-        <g:Button ui:field="cancel" visible="true" text="Cancel" tabIndex="9"/>
-        <g:Button ui:field="clear" visible="true" text="Clear fields" tabIndex="10"/>
-        <g:Button ui:field="submit" visible="true" enabled="false" text="Sign Up" tabIndex="11"/>
+        <g:FlowPanel addStyleNames="{res.registrationStyle.buttonsContainer}">
+            <g:FlowPanel>
+                <g:Button ui:field="cancel" addStyleNames="{res.registrationStyle.cancelButton}" visible="true" text="Cancel" tabIndex="9"/>
+                <g:Button ui:field="clear" visible="true" text="Clear fields" tabIndex="10"/>
+            </g:FlowPanel>
+            <g:Button ui:field="submit" visible="true" enabled="false" text="Sign Up" tabIndex="11"/>
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>
