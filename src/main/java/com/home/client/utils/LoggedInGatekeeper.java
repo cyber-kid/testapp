@@ -2,7 +2,7 @@ package com.home.client.utils;
 
 import com.gwtplatform.mvp.client.annotations.DefaultGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Gatekeeper;
-import com.home.shared.CurrentUser;
+import com.home.shared.model.CurrentUser;
 
 import javax.inject.Inject;
 

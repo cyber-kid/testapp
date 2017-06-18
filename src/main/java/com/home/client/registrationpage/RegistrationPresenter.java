@@ -1,6 +1,8 @@
 package com.home.client.registrationpage;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -10,9 +12,14 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.home.client.ApplicationPresenter;
+import com.home.client.api.UserResourseClient;
 import com.home.client.places.NameTokens;
 import com.home.client.widgets.LookUpItem;
-import com.home.shared.CurrentUser;
+import com.home.shared.model.CurrentUser;
+import com.home.shared.model.TestItem;
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -40,6 +47,19 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     private int monthOfBirth;
     private int yearOfBirth;
 
+    UserResourseClient client;
+    MethodCallback<CurrentUser> callback = new MethodCallback<CurrentUser>() {
+        @Override
+        public void onFailure(Method method, Throwable throwable) {
+            Window.alert(throwable.getMessage());
+        }
+
+        @Override
+        public void onSuccess(Method method, CurrentUser user) {
+            redirectToHomePage();
+        }
+    };
+
     @Inject
     RegistrationPresenter(
             EventBus eventBus,
@@ -58,6 +78,10 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
         addNamesCheck();
         addPasswordCheck();
         addEmailCheck();
+
+        Defaults.setServiceRoot(GWT.getHostPageBaseURL());
+        Defaults.setDateFormat(null);
+        client = GWT.create(UserResourseClient.class);
     }
 
     @Override
@@ -94,7 +118,8 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     @Override
     public void onSubmit() {
         setUserDetails();
-        redirectToHomePage();
+        saveUserDetails();
+        //redirectToHomePage();
     }
 
     @Override
@@ -285,13 +310,14 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
         user.setFirstName(getView().getFirstName().getText());
         user.setLastName(getView().getLastName().getText());
         user.setEmail(getView().getEmail().getText());
-        user.setPassword(getView().getPassword().getText()); //TODO encrypt password
+        user.setPassword(getView().getPassword().getText());
 
         yearOfBirth = getView().getYear().getModel();
+        Window.alert(String.valueOf(yearOfBirth));
         monthOfBirth = getView().getMonth().getModel();
         dayOfBirth = getView().getDay().getModel();
         Date dob = new Date(yearOfBirth, monthOfBirth, dayOfBirth);
-        user.setDob(dob);
+        //user.setDob(dob);
         user.setLoggedIn();
     }
 
@@ -300,6 +326,10 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
                 .nameToken(NameTokens.HOME)
                 .build();
         placeManager.revealPlace(placeRequest);
+    }
+
+    private void saveUserDetails() {
+        client.addUser(user, callback);
     }
 
     private void resetFields() {

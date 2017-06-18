@@ -35,8 +35,6 @@ public class RegistrationViewImpl extends ViewWithUiHandlers<RegistrationUiHandl
     LookUp<Integer> year;
     @UiField
     Button submit;
-    /*@UiField
-    Button cancel;*/
 
     @Inject
     RegistrationViewImpl(Binder uiBinder) {
