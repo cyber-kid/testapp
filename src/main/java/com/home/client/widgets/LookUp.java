@@ -363,6 +363,7 @@ public class LookUp<T> extends Composite implements HasText,
         Widget item = panel.getWidget(focusedItemIndex);
         if (item instanceof LookUpItem) {
             setSelectedItem((LookUpItem<T>)item);
+            setText(((LookUpItem) item).getText());
             ValueChangeEvent.fire(this, getModel());
         }
     }
