@@ -7,12 +7,8 @@ import com.home.shared.model.TestItem;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.file.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Path("/")
 public class UserResource {
@@ -24,7 +20,8 @@ public class UserResource {
         ObjectMapper mapper = new ObjectMapper();
         CurrentUser user = new CurrentUser();
 
-        java.nio.file.Path folder = Paths.get("D:\\dev\\workspace\\users");
+        java.nio.file.Path folder = Paths.get("users");
+
         String fileName = name.split("@")[0] + ".txt";
         java.nio.file.Path file = Paths.get(folder.toString(), fileName);
 
@@ -44,7 +41,15 @@ public class UserResource {
     public CurrentUser addUser(CurrentUser user) {
         ObjectMapper mapper = new ObjectMapper();
 
-        java.nio.file.Path folder = Paths.get("D:\\dev\\workspace\\users");
+        java.nio.file.Path folder = Paths.get("users");
+        if(!Files.exists(folder)) {
+            try {
+                Files.createDirectories(folder);
+                System.out.println(folder.toAbsolutePath().toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         String fileName = user.getEmail().split("@")[0] + ".txt";
         java.nio.file.Path file = Paths.get(folder.toString(), fileName);
 
