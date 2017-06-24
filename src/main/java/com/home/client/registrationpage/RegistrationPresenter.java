@@ -51,8 +51,10 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
         user = currentUser;
         this.placeManager = placeManager;
         getView().setUiHandlers(this);
-        buildDaysLookUp();
         initMonthsMap();
+        buildDaysLookUp();
+        buildMonthsLookUp(0);
+        buildYearLookUp(0,0);
         addNamesCheck();
         addPasswordCheck();
         addEmailCheck();
@@ -187,6 +189,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
                 break;
             default:
                 months.entrySet().forEach(action);
+                break;
         }
     }
 
