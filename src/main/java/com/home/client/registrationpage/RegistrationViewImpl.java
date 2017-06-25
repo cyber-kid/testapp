@@ -1,5 +1,6 @@
 package com.home.client.registrationpage;
 
+import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -45,6 +46,11 @@ public class RegistrationViewImpl extends ViewWithUiHandlers<RegistrationUiHandl
     @UiHandler({"firstName", "lastName", "email", "passwordConfirmation"})
     public void onValueChange(ValueChangeEvent<String> changeEvent) {
         getUiHandlers().onValueChange();
+    }
+
+    @UiHandler("email")
+    public void onBlur(BlurEvent blurEvent) {
+        getUiHandlers().onEmailFieldBlur();
     }
 
     @UiHandler("day")

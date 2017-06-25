@@ -3,6 +3,8 @@ package com.home.client.widgets;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -19,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-public class TextBoxWithValidation extends Composite implements HasValueChangeHandlers<String>, HasText {
+public class TextBoxWithValidation extends Composite implements HasValueChangeHandlers<String>,
+        HasText,
+        HasBlurHandlers {
     @UiField
     Label label;
     @UiField
@@ -35,6 +39,7 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
     private boolean isValid = false;
     private boolean isMandatory = false;
     private boolean isPassword = false;
+    private boolean delayedValidation = false;
 
     private Map<String, RegExp> checks = new HashMap<>();
     private List<String> errorMessages = new ArrayList<>();
@@ -60,6 +65,11 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> valueChangeHandler) {
         return addHandler(valueChangeHandler, ValueChangeEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addBlurHandler(BlurHandler blurHandler) {
+        return addDomHandler(blurHandler, BlurEvent.getType());
     }
 
     @Override
@@ -92,22 +102,20 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
 
     @UiHandler("input")
     public void onInputBlur(BlurEvent blurEvent) {
-        validate(input.getText());
-        setIcon();
-        if(!isValid) {
-            showNoteWithErrors();
+        if(!delayedValidation) {
+            validateFiled();
+        } else {
+            BlurEvent.fireNativeEvent(blurEvent.getNativeEvent(), this);
         }
-        ValueChangeEvent.fire(this, input.getText());
     }
 
     @UiHandler("password")
     public void onPasswordBlur(BlurEvent blurEvent) {
-        validate(password.getText());
-        setIcon();
-        if(!isValid) {
-            showNoteWithErrors();
+        if(!delayedValidation) {
+            validateFiled();
+        } else {
+            BlurEvent.fireNativeEvent(blurEvent.getNativeEvent(), this);
         }
-        ValueChangeEvent.fire(this, password.getText());
     }
 
     private void setIcon () {
@@ -119,7 +127,7 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
         checkFlag.setVisible(true);
     }
 
-    private void validate(String str) {
+    private void validateInput(String str) {
         errorMessages.clear();
         if(isMandatory && Strings.isNullOrEmpty(str)) {
             errorMessages.add("This field is mandatory and can not be empty.");
@@ -133,6 +141,16 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
         }
 
         setValid(errorMessages.isEmpty());
+    }
+
+    public void validateFiled() {
+        String text = isPassword ? password.getText() : input.getText();
+        validateInput(text);
+        setIcon();
+        if(!isValid) {
+            showNoteWithErrors();
+        }
+        ValueChangeEvent.fire(this, input.getText());
     }
 
     private void showNoteWithErrors() {
@@ -190,6 +208,14 @@ public class TextBoxWithValidation extends Composite implements HasValueChangeHa
 
     public void setPassword(boolean password) {
         isPassword = password;
+    }
+
+    public boolean isDelayedValidation() {
+        return delayedValidation;
+    }
+
+    public void setDelayedValidation(boolean delayedValidation) {
+        this.delayedValidation = delayedValidation;
     }
 
     public void setTabIndex(int index) {
