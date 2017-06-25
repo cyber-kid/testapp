@@ -1,6 +1,5 @@
 package com.home.client.loginpage;
 
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -10,8 +9,11 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.home.client.ApplicationPresenter;
-import com.home.shared.CurrentUser;
+import com.home.client.utils.ClientFactory;
+import com.home.shared.model.AppUser;
 import com.home.client.places.NameTokens;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
 import javax.inject.Inject;
 
@@ -24,24 +26,56 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     public interface MyProxy extends ProxyPlace<LoginPresenter> {
     }
 
-    // Credentials are stored here for demo purpose only.
-    //private static final String USERNAME = "admin";
-    //private static final String PASSWORD = "admin123";
-
     private PlaceManager placeManager;
-    private CurrentUser currentUser;
+    private AppUser appUser;
+    private ClientFactory clientFactory;
+
+    private String name;
+    private String password;
+
+    private MethodCallback<AppUser> callback = new MethodCallback<AppUser>() {
+        @Override
+        public void onFailure(Method method, Throwable throwable) {}
+
+        @Override
+        public void onSuccess(Method method, AppUser user) {
+            if(user != null) {
+                appUser.setFirstName(user.getFirstName());
+                appUser.setLastName(user.getLastName());
+                appUser.setPassword(user.getPassword());
+                //appUser.setDob(user.getDob());
+                appUser.setEmail(user.getEmail());
+
+                if (validateCredentials()) {
+                    appUser.setLoggedIn();
+
+                    PlaceRequest placeRequest = new PlaceRequest.Builder()
+                            .nameToken(NameTokens.HOME)
+                            .build();
+                    placeManager.revealPlace(placeRequest);
+                } else {
+                    showErrorNote();
+                }
+            } else {
+                showErrorNote();
+            }
+        }
+    };
 
     @Inject
     LoginPresenter(
             EventBus eventBus,
             LoginView view,
             MyProxy proxy,
-            CurrentUser currentUser,
-            PlaceManager placeManager) {
+            AppUser appUser,
+            PlaceManager placeManager,
+            ClientFactory clientFactory) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
 
-        this.currentUser = currentUser;
+        this.appUser = appUser;
         this.placeManager = placeManager;
+        this.clientFactory = clientFactory;
+
         getView().setUiHandlers(this);
     }
 
@@ -52,21 +86,9 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
 
     @Override
     public void confirm(String username, String password) {
-        if (validateCredentials(username, password)) {
-            currentUser.setLoggedIn();
-
-            PlaceRequest placeRequest = new PlaceRequest.Builder()
-                    .nameToken(NameTokens.HOME)
-                    .build();
-            placeManager.revealPlace(placeRequest);
-        } else {
-            getView().addErrorNote();
-            getView().clearFields();
-        }
-    }
-
-    private boolean validateCredentials(String username, String password) {
-        return username.equals(currentUser.getEmail()) && password.equals(currentUser.getPassword());
+        this.name = username;
+        this.password = password;
+        clientFactory.getUserResourceClient().getUser(username, callback);
     }
 
     @Override
@@ -75,5 +97,14 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
                 .nameToken(NameTokens.REGISTER)
                 .build();
         placeManager.revealPlace(placeRequest);
+    }
+
+    private boolean validateCredentials() {
+        return name.equals(appUser.getEmail()) && password.equals(appUser.getPassword());
+    }
+
+    private void showErrorNote() {
+        getView().addErrorNote();
+        getView().clearFields();
     }
 }

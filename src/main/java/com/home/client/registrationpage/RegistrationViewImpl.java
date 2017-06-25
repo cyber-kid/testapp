@@ -35,8 +35,6 @@ public class RegistrationViewImpl extends ViewWithUiHandlers<RegistrationUiHandl
     LookUp<Integer> year;
     @UiField
     Button submit;
-    /*@UiField
-    Button cancel;*/
 
     @Inject
     RegistrationViewImpl(Binder uiBinder) {
@@ -65,7 +63,7 @@ public class RegistrationViewImpl extends ViewWithUiHandlers<RegistrationUiHandl
 
     @UiHandler("year")
     public void onYearValueChange(ValueChangeEvent<Integer> changeEvent) {
-        getUiHandlers().onValueChange();
+        getUiHandlers().onYearLookUpValueChange(changeEvent.getValue());
     }
 
     @UiHandler("password")

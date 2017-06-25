@@ -1,6 +1,7 @@
 package com.home.client.registrationpage;
 
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -11,11 +12,15 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.home.client.ApplicationPresenter;
 import com.home.client.places.NameTokens;
+import com.home.client.utils.ClientFactory;
 import com.home.client.widgets.LookUpItem;
-import com.home.shared.CurrentUser;
+import com.home.shared.model.AppUser;
+import com.home.shared.model.KeyValue;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
 import javax.inject.Inject;
-import java.util.Date;
+//import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -31,8 +36,9 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     public interface MyProxy extends ProxyPlace<RegistrationPresenter> {}
 
 
-    private CurrentUser user;
+    private AppUser user;
     private PlaceManager placeManager;
+    private ClientFactory clientFactory;
 
     private Map<Integer, String> months = new HashMap<>();
 
@@ -40,21 +46,52 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     private int monthOfBirth;
     private int yearOfBirth;
 
+    private MethodCallback<AppUser> addUserCallback = new MethodCallback<AppUser>() {
+        @Override
+        public void onFailure(Method method, Throwable throwable) {}
+
+        @Override
+        public void onSuccess(Method method, AppUser user) {
+            if(user != null) {
+                redirectToHomePage();
+            } else {
+                Window.alert("Error happened when saving the data. Please, try again.");
+            }
+        }
+    };
+
+    private MethodCallback<KeyValue> testUserCallback = new MethodCallback<KeyValue>() {
+        @Override
+        public void onFailure(Method method, Throwable throwable) {}
+
+        @Override
+        public void onSuccess(Method method, KeyValue keyValue) {
+            if(keyValue.getValue() != null) {
+                RegExp check = RegExp.compile("[^" + keyValue.getValue() + "]");
+                getView().getEmail().addCheck("Such user already exists", check);
+            }
+            getView().getEmail().validateFiled();
+            validate();
+        }
+    };
+
     @Inject
     RegistrationPresenter(
             EventBus eventBus,
             RegistrationView view,
-            CurrentUser currentUser,
+            AppUser appUser,
             PlaceManager placeManager,
-            MyProxy proxy) {
+            MyProxy proxy,
+            ClientFactory clientFactory) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
-        user = currentUser;
+        user = appUser;
         this.placeManager = placeManager;
+        this.clientFactory = clientFactory;
         getView().setUiHandlers(this);
         initMonthsMap();
         buildDaysLookUp();
-        buildMonthsLookUp(0);
-        buildYearLookUp(0,0);
+        buildMonthsLookUp();
+        buildYearLookUp();
         addNamesCheck();
         addPasswordCheck();
         addEmailCheck();
@@ -67,22 +104,28 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
 
     @Override
     public void onEmailFieldBlur() {
-        getView().getEmail().addCheck("Such user already exists", RegExp.compile("[^amyrgorod@gmail.com]"));
-        getView().getEmail().validateFiled();
+        String email = getView().getEmail().getText();
+        clientFactory.getUserResourceClient().getTest(email, testUserCallback);
     }
 
     @Override
     public void onDayLookUpValueChange(int day) {
         validate();
         dayOfBirth = day;
-        buildMonthsLookUp(dayOfBirth);
+        buildMonthsLookUp();
     }
 
     @Override
     public void onMonthLookUpValueChange(int month) {
         validate();
         monthOfBirth = month;
-        buildYearLookUp(dayOfBirth, monthOfBirth);
+        buildYearLookUp();
+    }
+
+    @Override
+    public void onYearLookUpValueChange(int year) {
+        validate();
+        yearOfBirth = year;
     }
 
     @Override
@@ -94,7 +137,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     @Override
     public void onSubmit() {
         setUserDetails();
-        redirectToHomePage();
+        saveUserDetails();
     }
 
     @Override
@@ -176,7 +219,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
         };
     }
 
-    private void buildMonthsLookUp(int day) {
+    private void buildMonthsLookUp() {
         getView().getMonth().clear();
 
         Consumer<Map.Entry<Integer, String>> action = (entry) -> {
@@ -186,7 +229,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
             getView().getMonth().add(item);
         };
 
-        switch (day) {
+        switch (dayOfBirth) {
             case 31:
                 months.entrySet().stream().filter(with31DayFilter()).forEach(action);
                 break;
@@ -195,7 +238,6 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
                 break;
             default:
                 months.entrySet().forEach(action);
-                break;
         }
     }
 
@@ -228,7 +270,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
         };
     }
 
-    private void buildYearLookUp(int day, int month) {
+    private void buildYearLookUp() {
         getView().getYear().clear();
 
         IntConsumer action = (year) -> {
@@ -238,7 +280,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
             getView().getYear().add(item);
         };
 
-        if(day == 29 && month == 1) {
+        if(dayOfBirth == 29 && monthOfBirth == 1) {
             IntStream.rangeClosed(1950, 2017).filter(findLeapYear()).forEach(action);
         } else {
             IntStream.rangeClosed(1950, 2017).forEach(action);
@@ -256,7 +298,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
         RegExp digitPattern = RegExp.compile(".*\\d+.*");
         RegExp upperCaseLetterPattern = RegExp.compile(".*[A-Z]+.*");
         RegExp lowerCaseLetterPattern = RegExp.compile(".*[a-z]+.*");
-        RegExp specialCharacterPattern = RegExp.compile(".*[$@$!%*#?&]+.*");
+        RegExp specialCharacterPattern = RegExp.compile(".*[$@$!_%*#?&]+.*");
         RegExp lengthPattern = RegExp.compile(".{8,}");
 
         getView().getPassword().addCheck("This field should contain at least one digit.", digitPattern);
@@ -285,13 +327,10 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
         user.setFirstName(getView().getFirstName().getText());
         user.setLastName(getView().getLastName().getText());
         user.setEmail(getView().getEmail().getText());
-        user.setPassword(getView().getPassword().getText()); //TODO encrypt password
+        user.setPassword(getView().getPassword().getText());
 
-        yearOfBirth = getView().getYear().getModel();
-        monthOfBirth = getView().getMonth().getModel();
-        dayOfBirth = getView().getDay().getModel();
-        Date dob = new Date(yearOfBirth, monthOfBirth, dayOfBirth);
-        user.setDob(dob);
+        //Date dob = new Date(yearOfBirth, monthOfBirth, dayOfBirth);
+        //user.setDob(dob);
         user.setLoggedIn();
     }
 
@@ -300,6 +339,10 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
                 .nameToken(NameTokens.HOME)
                 .build();
         placeManager.revealPlace(placeRequest);
+    }
+
+    private void saveUserDetails() {
+        clientFactory.getUserResourceClient().addUser(user, addUserCallback);
     }
 
     private void resetFields() {

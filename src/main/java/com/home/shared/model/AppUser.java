@@ -1,24 +1,28 @@
-package com.home.shared;
+package com.home.shared.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.inject.Singleton;
 import java.util.Date;
 
 @Singleton
-public class CurrentUser {
+public class AppUser {
     private boolean isLoggedIn;
     private String firstName;
     private String lastName;
     private String email;
-    private Date dob;
+    //private Date dob;
     private String password; //TODO encrypt password
 
-
+    @JsonIgnore
     public boolean isLoggedIn() {
         return isLoggedIn;
     }
+    @JsonIgnore
     public void setLoggedIn() {
         isLoggedIn = true;
     }
+
     public String getFirstName() {
         return firstName;
     }
@@ -36,23 +40,23 @@ public class CurrentUser {
     }
 
     public String getEmail() {
-        return email != null ? email : "admin";
+        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public Date getDob() {
+    /*public Date getDob() {
         return dob;
     }
 
     public void setDob(Date dob) {
         this.dob = dob;
-    }
+    }*/
 
     public String getPassword() {
-        return password != null ? password : "admin123";
+        return password;
     }
 
     public void setPassword(String password) {
