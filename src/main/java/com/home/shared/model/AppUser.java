@@ -6,7 +6,7 @@ import javax.inject.Singleton;
 import java.util.Date;
 
 @Singleton
-public class CurrentUser {
+public class AppUser {
     private boolean isLoggedIn;
     private String firstName;
     private String lastName;

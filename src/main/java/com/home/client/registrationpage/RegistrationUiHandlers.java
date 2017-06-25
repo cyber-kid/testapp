@@ -6,6 +6,7 @@ public interface RegistrationUiHandlers extends UiHandlers {
     void onValueChange();
     void onDayLookUpValueChange(int day);
     void onMonthLookUpValueChange(int month);
+    void onYearLookUpValueChange(int year);
     void onPasswordValueChange();
     void onSubmit();
     void onCancel();

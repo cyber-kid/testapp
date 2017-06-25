@@ -1,6 +1,6 @@
 package com.home.client.api;
 
-import com.home.shared.model.CurrentUser;
+import com.home.shared.model.AppUser;
 import com.home.shared.model.TestItem;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -13,7 +13,7 @@ public interface UserResourseClient extends RestService {
     @Path("/api/newUser")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void addUser(CurrentUser user, MethodCallback<CurrentUser> callback);
+    public void addUser(AppUser user, MethodCallback<AppUser> callback);
 
     @GET
     @Path("/api/test")
@@ -24,5 +24,5 @@ public interface UserResourseClient extends RestService {
     @Path("/api/user")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public void getUser(@QueryParam("name") String name, MethodCallback<CurrentUser> callback);
+    public void getUser(@QueryParam("name") String name, MethodCallback<AppUser> callback);
 }

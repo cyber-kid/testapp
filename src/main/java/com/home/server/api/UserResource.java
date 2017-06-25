@@ -1,7 +1,9 @@
 package com.home.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.home.shared.model.CurrentUser;
+import com.home.server.dao.DataAccessObject;
+import com.home.server.dao.FlatFileDAO;
+import com.home.shared.model.AppUser;
 import com.home.shared.model.TestItem;
 
 import javax.ws.rs.*;
@@ -12,54 +14,22 @@ import java.nio.file.*;
 
 @Path("/")
 public class UserResource {
+    private DataAccessObject dao = new FlatFileDAO();
+
     @GET
     @Path("/user")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUser getUser(@QueryParam("name") String name) {
-        ObjectMapper mapper = new ObjectMapper();
-        CurrentUser user = new CurrentUser();
-
-        java.nio.file.Path folder = Paths.get("users");
-
-        String fileName = name.split("@")[0] + ".txt";
-        java.nio.file.Path file = Paths.get(folder.toString(), fileName);
-
-        try {
-            user = mapper.readValue(file.toFile(), CurrentUser.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return user;
+    public AppUser getUser(@QueryParam("name") String name) {
+        return dao.getUser(name);
     }
 
     @POST
     @Path("/newUser")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CurrentUser addUser(CurrentUser user) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        java.nio.file.Path folder = Paths.get("users");
-        if(!Files.exists(folder)) {
-            try {
-                Files.createDirectories(folder);
-                System.out.println(folder.toAbsolutePath().toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        String fileName = user.getEmail().split("@")[0] + ".txt";
-        java.nio.file.Path file = Paths.get(folder.toString(), fileName);
-
-        try {
-            mapper.writeValue(file.toFile(), user);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error!");
-        }
-        return user;
+    public AppUser addUser(AppUser user) {
+        return dao.addUser(user);
     }
 
     @GET

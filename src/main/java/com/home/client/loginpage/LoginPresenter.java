@@ -1,7 +1,5 @@
 package com.home.client.loginpage;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.annotations.NameToken;
@@ -11,10 +9,9 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import com.home.client.ApplicationPresenter;
-import com.home.client.api.UserResourseClient;
-import com.home.shared.model.CurrentUser;
+import com.home.client.utils.ClientFactory;
+import com.home.shared.model.AppUser;
 import com.home.client.places.NameTokens;
-import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
@@ -30,36 +27,37 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     }
 
     private PlaceManager placeManager;
-    private CurrentUser currentUser;
+    private AppUser appUser;
+    private ClientFactory clientFactory;
 
-    String name;
-    String password;
+    private String name;
+    private String password;
 
-    UserResourseClient client;
-    MethodCallback<CurrentUser> callback = new MethodCallback<CurrentUser>() {
+    private MethodCallback<AppUser> callback = new MethodCallback<AppUser>() {
         @Override
-        public void onFailure(Method method, Throwable throwable) {
-            Window.alert(throwable.getMessage());
-        }
+        public void onFailure(Method method, Throwable throwable) {}
 
         @Override
-        public void onSuccess(Method method, CurrentUser user) {
-            currentUser.setFirstName(user.getFirstName());
-            currentUser.setLastName(user.getLastName());
-            currentUser.setPassword(user.getPassword());
-            //currentUser.setDob(user.getDob());
-            currentUser.setEmail(user.getEmail());
+        public void onSuccess(Method method, AppUser user) {
+            if(user != null) {
+                appUser.setFirstName(user.getFirstName());
+                appUser.setLastName(user.getLastName());
+                appUser.setPassword(user.getPassword());
+                //appUser.setDob(user.getDob());
+                appUser.setEmail(user.getEmail());
 
-            if (validateCredentials()) {
-                currentUser.setLoggedIn();
+                if (validateCredentials()) {
+                    appUser.setLoggedIn();
 
-                PlaceRequest placeRequest = new PlaceRequest.Builder()
-                        .nameToken(NameTokens.HOME)
-                        .build();
-                placeManager.revealPlace(placeRequest);
+                    PlaceRequest placeRequest = new PlaceRequest.Builder()
+                            .nameToken(NameTokens.HOME)
+                            .build();
+                    placeManager.revealPlace(placeRequest);
+                } else {
+                    showErrorNote();
+                }
             } else {
-                getView().addErrorNote();
-                getView().clearFields();
+                showErrorNote();
             }
         }
     };
@@ -69,17 +67,16 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
             EventBus eventBus,
             LoginView view,
             MyProxy proxy,
-            CurrentUser currentUser,
-            PlaceManager placeManager) {
+            AppUser appUser,
+            PlaceManager placeManager,
+            ClientFactory clientFactory) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
 
-        this.currentUser = currentUser;
+        this.appUser = appUser;
         this.placeManager = placeManager;
-        getView().setUiHandlers(this);
+        this.clientFactory = clientFactory;
 
-        Defaults.setServiceRoot(GWT.getHostPageBaseURL());
-        Defaults.setDateFormat(null);
-        client = GWT.create(UserResourseClient.class);
+        getView().setUiHandlers(this);
     }
 
     @Override
@@ -91,11 +88,7 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
     public void confirm(String username, String password) {
         this.name = username;
         this.password = password;
-        client.getUser(username, callback);
-    }
-
-    private boolean validateCredentials() {
-        return name.equals(currentUser.getEmail()) && password.equals(currentUser.getPassword());
+        clientFactory.getUserResourceClient().getUser(username, callback);
     }
 
     @Override
@@ -104,5 +97,14 @@ public class LoginPresenter extends Presenter<LoginView, LoginPresenter.MyProxy>
                 .nameToken(NameTokens.REGISTER)
                 .build();
         placeManager.revealPlace(placeRequest);
+    }
+
+    private boolean validateCredentials() {
+        return name.equals(appUser.getEmail()) && password.equals(appUser.getPassword());
+    }
+
+    private void showErrorNote() {
+        getView().addErrorNote();
+        getView().clearFields();
     }
 }

@@ -17,7 +17,5 @@ public class ClientModule extends AbstractPresenterModule {
                 .build());
 
         install(new AppModule());
-
-        bind(StyleInjector.class).asEagerSingleton();
     }
 }

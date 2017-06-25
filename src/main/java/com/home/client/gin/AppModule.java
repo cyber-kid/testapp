@@ -4,7 +4,8 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.home.client.ApplicationPresenter;
 import com.home.client.ApplicationView;
 import com.home.client.ApplicationViewImpl;
-import com.home.shared.model.CurrentUser;
+import com.home.client.utils.StyleInjector;
+import com.home.shared.model.AppUser;
 import com.home.client.homepage.HomePresenter;
 import com.home.client.homepage.HomeView;
 import com.home.client.homepage.HomeViewImpl;
@@ -15,8 +16,6 @@ import com.home.client.registrationpage.RegistrationPresenter;
 import com.home.client.registrationpage.RegistrationView;
 import com.home.client.registrationpage.RegistrationViewImpl;
 
-import javax.inject.Singleton;
-
 
 public class AppModule extends AbstractPresenterModule {
     @Override
@@ -26,6 +25,7 @@ public class AppModule extends AbstractPresenterModule {
         bindPresenter(HomePresenter.class, HomeView.class, HomeViewImpl.class, HomePresenter.MyProxy.class);
         bindPresenter(LoginPresenter.class, LoginView.class, LoginViewImpl.class, LoginPresenter.MyProxy.class);
         bindPresenter(RegistrationPresenter.class, RegistrationView.class, RegistrationViewImpl.class, RegistrationPresenter.MyProxy.class);
-        bind(CurrentUser.class).in(Singleton.class);
+        bind(AppUser.class).asEagerSingleton();
+        bind(StyleInjector.class).asEagerSingleton();
     }
 }

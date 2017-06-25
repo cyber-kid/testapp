@@ -7,7 +7,7 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.home.client.ApplicationPresenter;
 import com.home.client.places.NameTokens;
-import com.home.shared.model.CurrentUser;
+import com.home.shared.model.AppUser;
 
 import javax.inject.Inject;
 
@@ -17,13 +17,13 @@ public class HomePresenter extends Presenter<HomeView, HomePresenter.MyProxy> {
     public interface MyProxy extends ProxyPlace<HomePresenter> {
     }
 
-    private CurrentUser user;
+    private AppUser user;
 
     @Inject
     HomePresenter(
             EventBus eventBus,
             HomeView view,
-            CurrentUser user,
+            AppUser user,
             MyProxy proxy) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
         this.user = user;

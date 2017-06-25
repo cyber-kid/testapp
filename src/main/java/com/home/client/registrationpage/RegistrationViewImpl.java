@@ -63,7 +63,7 @@ public class RegistrationViewImpl extends ViewWithUiHandlers<RegistrationUiHandl
 
     @UiHandler("year")
     public void onYearValueChange(ValueChangeEvent<Integer> changeEvent) {
-        getUiHandlers().onValueChange();
+        getUiHandlers().onYearLookUpValueChange(changeEvent.getValue());
     }
 
     @UiHandler("password")
