@@ -1,6 +1,7 @@
 package com.home.client.api;
 
 import com.home.shared.model.AppUser;
+import com.home.shared.model.KeyValue;
 import com.home.shared.model.TestItem;
 import org.fusesource.restygwt.client.MethodCallback;
 import org.fusesource.restygwt.client.RestService;
@@ -17,8 +18,9 @@ public interface UserResourseClient extends RestService {
 
     @GET
     @Path("/api/test")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public void getTest(MethodCallback<TestItem> callback);
+    public void getTest(@QueryParam("name") String name, MethodCallback<KeyValue> callback);
 
     @GET
     @Path("/api/user")

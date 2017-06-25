@@ -3,6 +3,7 @@ package com.home.server.dao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.home.server.utils.AppProperties;
 import com.home.shared.model.AppUser;
+import com.home.shared.model.KeyValue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -60,5 +61,26 @@ public class FlatFileDAO implements DataAccessObject {
         }
 
         return user;
+    }
+
+    @Override
+    public KeyValue testUser(String name) {
+        KeyValue result = new KeyValue();
+        /*Path folder = Paths.get(props.getProperty("users.folder", "users"));
+
+        String fileName = name + ".txt";
+        Path file = Paths.get(folder.toString(), fileName);
+
+        try {
+            file.toRealPath();
+        } catch (IOException e) {
+            result.setKey("user");
+            result.setValue(name);
+        }*/
+
+        result.setKey("user");
+        result.setValue(name);
+
+        return result;
     }
 }

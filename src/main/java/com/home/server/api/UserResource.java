@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.home.server.dao.DataAccessObject;
 import com.home.server.dao.FlatFileDAO;
 import com.home.shared.model.AppUser;
+import com.home.shared.model.KeyValue;
 import com.home.shared.model.TestItem;
 
 import javax.ws.rs.*;
@@ -34,12 +35,9 @@ public class UserResource {
 
     @GET
     @Path("/test")
+    @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public TestItem getTest() {
-        TestItem item = new TestItem();
-        item.setKey("result");
-        item.setValue("It works!");
-
-        return item;
+    public KeyValue getTest(@QueryParam("name") String name) {
+        return dao.testUser(name);
     }
 }

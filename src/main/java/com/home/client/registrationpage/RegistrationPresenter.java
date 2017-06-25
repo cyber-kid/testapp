@@ -15,6 +15,7 @@ import com.home.client.places.NameTokens;
 import com.home.client.utils.ClientFactory;
 import com.home.client.widgets.LookUpItem;
 import com.home.shared.model.AppUser;
+import com.home.shared.model.KeyValue;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
@@ -45,7 +46,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     private int monthOfBirth;
     private int yearOfBirth;
 
-    private MethodCallback<AppUser> callback = new MethodCallback<AppUser>() {
+    private MethodCallback<AppUser> addUserCallback = new MethodCallback<AppUser>() {
         @Override
         public void onFailure(Method method, Throwable throwable) {}
 
@@ -56,6 +57,24 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
             } else {
                 Window.alert("Error happened when saving the data. Please, try again.");
             }
+        }
+    };
+
+    private MethodCallback<KeyValue> testUserCallback = new MethodCallback<KeyValue>() {
+        @Override
+        public void onFailure(Method method, Throwable throwable) {
+            Window.alert("onFailure!");
+        }
+
+        @Override
+        public void onSuccess(Method method, KeyValue keyValue) {
+            /*if(keyValue.getValue() != null) {
+                RegExp check = RegExp.compile("[^" + keyValue.getValue() + "]");
+                getView().getEmail().addCheck("Such user already exists", check);
+            }
+            getView().getEmail().validateFiled();
+            validate();*/
+
         }
     };
 
@@ -88,8 +107,8 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
 
     @Override
     public void onEmailFieldBlur() {
-        getView().getEmail().addCheck("Such user already exists", RegExp.compile("[^amyrgorod@gmail.com]"));
-        getView().getEmail().validateFiled();
+        String email = getView().getEmail().getText();
+        clientFactory.getUserResourceClient().getTest(email, testUserCallback);
     }
 
     @Override
@@ -326,7 +345,7 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     }
 
     private void saveUserDetails() {
-        clientFactory.getUserResourceClient().addUser(user, callback);
+        clientFactory.getUserResourceClient().addUser(user, addUserCallback);
     }
 
     private void resetFields() {
