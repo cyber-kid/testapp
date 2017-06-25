@@ -7,7 +7,6 @@ import com.google.gwt.event.logical.shared.*;
 import com.google.common.base.Strings;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.*;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.home.client.resources.AppResources;
 import com.home.client.resources.ErrorNotePopUpStyle;
@@ -51,6 +50,7 @@ public class LookUp<T> extends Composite implements HasText,
     private LookUpItem<T> selectedItem;
     private int focusedItemIndex = -1;
     private PopupPanel errorNote = new PopupPanel();
+    private static final int MIN_DROPDOWN_HEIGHT = 21;
 
     @UiConstructor
     public LookUp(boolean vertical) {
@@ -273,7 +273,7 @@ public class LookUp<T> extends Composite implements HasText,
 
     private void addScroll() {
         int widgetCount = panel.getWidgetCount();
-        int dropDownHeight = panel.getWidget(0).getOffsetHeight();
+        int dropDownHeight = widgetCount > 0 ? panel.getWidget(0).getOffsetHeight() : MIN_DROPDOWN_HEIGHT;
         if(widgetCount > 10) {
             scrollPanel.setHeight(dropDownHeight * 10 + "px");
         } else {
