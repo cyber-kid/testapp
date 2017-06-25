@@ -10,4 +10,5 @@ public interface RegistrationUiHandlers extends UiHandlers {
     void onSubmit();
     void onCancel();
     void onClear();
+    void onEmailFieldBlur();
 }

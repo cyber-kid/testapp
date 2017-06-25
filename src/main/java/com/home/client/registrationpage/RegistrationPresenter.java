@@ -66,6 +66,12 @@ public class RegistrationPresenter extends Presenter<RegistrationView, Registrat
     }
 
     @Override
+    public void onEmailFieldBlur() {
+        getView().getEmail().addCheck("Such user already exists", RegExp.compile("[^amyrgorod@gmail.com]"));
+        getView().getEmail().validateFiled();
+    }
+
+    @Override
     public void onDayLookUpValueChange(int day) {
         validate();
         dayOfBirth = day;
