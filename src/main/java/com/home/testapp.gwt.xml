@@ -5,6 +5,7 @@
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
     <inherits name="com.google.common.base.Base"/>
     <inherits name="org.fusesource.restygwt.RestyGWT"/>
+    <inherits name="com.google.gwt.logging.Logging"/>
 
     <extend-configuration-property name="gin.ginjector.modules"
                                    value="com.home.client.gin.ClientModule"/>

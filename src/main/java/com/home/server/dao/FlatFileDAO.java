@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.home.server.utils.AppProperties;
 import com.home.shared.model.AppUser;
 import com.home.shared.model.KeyValue;
+import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,13 +15,15 @@ import java.util.Properties;
 
 public class FlatFileDAO implements DataAccessObject {
     private Properties props = AppProperties.getProps();
+    private Logger LOG = Logger.getLogger(FlatFileDAO.class);
+    private Path folder = Paths.get(props.getProperty("users.folder", "users"));
 
     @Override
     public AppUser getUser(String name) {
         ObjectMapper mapper = new ObjectMapper();
         AppUser user = new AppUser();
 
-        Path folder = Paths.get(props.getProperty("users.folder", "users"));
+        LOG.info("Search user: " + name);
 
         String fileName = name + ".txt";
         Path file = Paths.get(folder.toString(), fileName);
@@ -40,7 +43,6 @@ public class FlatFileDAO implements DataAccessObject {
     public AppUser addUser(AppUser user) {
         ObjectMapper mapper = new ObjectMapper();
 
-        Path folder = Paths.get(props.getProperty("users.folder", "users"));
         if(!Files.exists(folder)) {
             try {
                 Files.createDirectories(folder);
@@ -66,19 +68,14 @@ public class FlatFileDAO implements DataAccessObject {
     @Override
     public KeyValue testUser(String name) {
         KeyValue result = new KeyValue();
-        Path folder = Paths.get(props.getProperty("users.folder", "users"));
 
         String fileName = name + ".txt";
         Path file = Paths.get(folder.toString(), fileName);
 
-        try {
-            file.toRealPath();
-        } catch (IOException e) {
-            return result;
+        if(Files.exists(file)) {
+            result.setKey("user");
+            result.setValue(name);
         }
-
-        result.setKey("user");
-        result.setValue(name);
 
         return result;
     }
